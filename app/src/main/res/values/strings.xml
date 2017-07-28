@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">MishnaPals</string>
+    <string name="caseId">Enter Case Id</string>
+    <string name="search">Search</string>
+    <string name="currentMishnayosButton">My Mishnayos</string>
+    <string name="viewAllAvail">View All Available Mishnayos</string>
+    <string name="newCaseId">Case ID</string>
+    <string name="newNiftarName">Name of Niftar</string>
+    <string name="confirmCaseID">Re-enter ID</string>
+    <string name="hebNameNiftar">שם הנפטר</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="makePrivate">Make Private</string>
+    <string name="dateNiftarLabel">Date Niftar</string>
+    <string name="createCase">Create Case</string>
+    <string name="new_case">New Case</string>
+    <string name="taken">Taken</string>
+</resources>
