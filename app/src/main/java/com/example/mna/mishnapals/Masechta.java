@@ -1,10 +1,12 @@
 package com.example.mna.mishnapals;
 
+import java.io.Serializable;
+
 /**
  * Created by MNA on 7/25/2017.
  */
 
-public class Masechta {
+public class Masechta implements Serializable{
     String hebName, engName;
     int numPerakim;
     int numMishnayos;

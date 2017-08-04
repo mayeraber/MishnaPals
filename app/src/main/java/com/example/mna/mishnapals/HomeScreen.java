@@ -1,6 +1,7 @@
 package com.example.mna.mishnapals;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,9 @@ public class HomeScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
+        View layout = findViewById(R.id.backgroundLayoutHome);
+        Drawable background = layout.getBackground();
+        background.setAlpha(50);
         Button newCase = (Button)findViewById(R.id.newCase);
         newCase.setOnClickListener(
                 new View.OnClickListener(){

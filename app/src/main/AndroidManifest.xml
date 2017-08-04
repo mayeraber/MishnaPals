@@ -19,7 +19,8 @@
         <activity android:name=".NewCase" />
         <activity android:name=".MasechtosList" />
         <activity android:name=".SedarimList" />
-        <activity android:name=".ConfirmMasechta"></activity>
+        <activity android:name=".ConfirmMasechta" />
+        <activity android:name=".NewCaseCreated"></activity>
     </application>
 
 </manifest>

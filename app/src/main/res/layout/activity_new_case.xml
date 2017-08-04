@@ -1,53 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/backgroundLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:orientation="vertical" >
+    android:background="@drawable/images">
 
-    <EditText
-        android:id="@+id/editText2"
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/nameOfNiftar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/niftarNameLabelHeb"
         android:ems="10"
-        android:inputType="textPersonName" />
-
+        android:inputType="textCapSentences"
+        app:backgroundTint="@color/colorPrimary"
+    />
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/nameNiftarLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/nameOfNiftar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="48dp"
         android:text="@string/newNiftarName" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/editText2"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:text="@string/hebNameNiftar" />
 
-    <EditText
+    <android.support.v7.widget.AppCompatEditText
         android:id="@+id/caseIdEntry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/caseIDLabel"
-        android:layout_marginTop="19dp"
+        android:layout_below="@+id/caseIDLabel"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:visibility="gone" />
+        android:inputType="text"
+        android:visibility="gone"
+        app:backgroundTint="@color/colorPrimary"
+        />
 
-    <EditText
+    <android.support.v7.widget.AppCompatEditText
         android:id="@+id/caseIDConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,19 +53,19 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/confirmCaseIDLabel"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:visibility="gone" />
+        android:inputType="text"
+        android:visibility="gone"
+        app:backgroundTint="@color/colorPrimary"
+        />
 
     <TextView
         android:id="@+id/caseIDLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/textView"
+        android:layout_alignLeft="@+id/makePrivateCheckBox"
+        android:layout_alignStart="@+id/makePrivateCheckBox"
         android:layout_below="@+id/makePrivateCheckBox"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="12dp"
         android:text="@string/caseId"
         android:visibility="gone" />
 
@@ -75,31 +73,37 @@
         android:id="@+id/confirmCaseIDLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignLeft="@+id/caseIDConfirm"
+        android:layout_alignStart="@+id/caseIDConfirm"
         android:layout_below="@+id/caseIdEntry"
-        android:layout_marginTop="14dp"
         android:text="@string/confirmCaseID"
         android:visibility="gone" />
 
-    <EditText
+    <android.support.v7.widget.AppCompatEditText
         android:id="@+id/dateNiftar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText2"
-        android:layout_marginTop="46dp"
+        android:layout_alignLeft="@+id/makePrivateCheckBox"
+        android:layout_alignStart="@+id/makePrivateCheckBox"
+        android:layout_below="@+id/dateNiftarLabel"
         android:ems="10"
         android:focusableInTouchMode="false"
-        android:inputType="textPersonName|date" />
+        android:inputType="textPersonName|date"
+        app:backgroundTint="@color/colorPrimary"
+        />
 
     <CheckBox
         android:id="@+id/makePrivateCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/makePrivate"
-        android:layout_centerVertical="true"
+        android:layout_alignEnd="@+id/caseIDConfirm"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/caseIDConfirm"
+        android:layout_below="@+id/dateNiftar"
+        android:layout_marginTop="28dp"
+        android:maxLines="1"
+        android:text="@string/makePrivate" />
 
     <TextView
         android:id="@+id/dateNiftarLabel"
@@ -107,17 +111,85 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/editText2"
-        android:layout_marginTop="25dp"
+        android:layout_below="@+id/fatherName"
+        android:layout_marginTop="12dp"
         android:text="@string/dateNiftarLabel" />
 
     <Button
         android:id="@+id/createCaseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="@string/createCase"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="11dp"
+        android:text="@string/createCase" />
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/fatherName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/nameOfNiftar"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:inputType="textCapSentences|textPersonName"
+        app:backgroundTint="@color/colorPrimary"
+        />
+
+    <TextView
+        android:id="@+id/fatherNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/nameOfNiftar"
+        android:layout_marginTop="17dp"
+        android:text="Name of Father" />
+
+    <TextView
+        android:id="@+id/fatherNameLabelHebrew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/fatherNameLabel"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="שם האב" />
+
+    <TextView
+        android:id="@+id/niftarNameLabelHeb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:text="@string/hebNameNiftar" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/createCaseButton"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:text="@string/moreOptionsInNewCase"
+        android:textColor="@android:color/holo_blue_dark" />
+
+    <Button
+        android:id="@+id/privateInfoButton"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignLeft="@+id/createCaseButton"
+        android:layout_alignStart="@+id/createCaseButton"
+        android:layout_alignTop="@+id/makePrivateCheckBox"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/button_border"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="  \?  " />
 
 </RelativeLayout>

@@ -16,4 +16,8 @@
     <string name="createCase">Create Case</string>
     <string name="new_case">New Case</string>
     <string name="taken">Taken</string>
+    <string name="confirmMasechtaButton">Sign Me Up!</string>
+    <string name="reserveMasechta">Reserve</string>
+    <string name="moreOptionsInNewCase"><i><u>More Options</u></i></string>
+    <string name="takeMishnayos">View Mishnayos List</string>
 </resources>

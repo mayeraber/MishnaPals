@@ -52,15 +52,21 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/masechtaName"
-        android:layout_alignBottom="@+id/masechtaName"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_toLeftOf="@+id/numMishnayos"
-        android:layout_toStartOf="@+id/numMishnayos"
         android:background="@android:color/holo_red_light"
         android:text="@string/taken"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/numMishnayos"
+        android:layout_toStartOf="@+id/numMishnayos" />
+
+    <Button
+        android:id="@+id/reserveMasechtaButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:text="@string/reserveMasechta" />
 
 
 </RelativeLayout>

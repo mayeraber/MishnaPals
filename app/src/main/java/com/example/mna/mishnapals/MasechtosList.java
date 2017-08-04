@@ -1,6 +1,7 @@
 package com.example.mna.mishnapals;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -305,7 +307,7 @@ public class MasechtosList extends AppCompatActivity {
         }
 
         @Override
-        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
            if(convertView==null)
            {
                LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -319,12 +321,29 @@ public class MasechtosList extends AppCompatActivity {
             perakim.setText((details.get(titles.get(groupPosition))[childPosition].numPerakim)+ " פרקים ");
             mishnayos.setText(""+  (details.get(titles.get(groupPosition))[childPosition].numMishnayos)+ " משניות ");
 
+            Button takeMasechta = (Button)convertView.findViewById(R.id.reserveMasechtaButton);
+            takeMasechta.setOnClickListener(
+                    new View.OnClickListener(){
+                        public void onClick(View view)
+                        {
+                            reserveButtonClicked(view, groupPosition, childPosition);
+                        }
+                    }
+            );
+
             return convertView;
         }
 
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return false;
+        }
+
+        public void reserveButtonClicked(View view, int groupPosition, int childPosition)
+        {
+            Intent intent = new Intent(getBaseContext(), ConfirmMasechta.class);
+            intent.putExtra("Masechta", details.get(titles.get(groupPosition))[childPosition]);
+            startActivity(intent);
         }
     }
 }
