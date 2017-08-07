@@ -5,9 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.app.AlertDialog;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,11 +21,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Calendar;
 
 import java.sql.Time;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.logging.LogManager;
 
 import static java.util.Calendar.YEAR;
 
@@ -40,6 +47,8 @@ public class NewCase extends AppCompatActivity {
     Calendar dateNiftarCal = new GregorianCalendar();
     DatePickerDialog datePickerDialog;
     AlertDialog.Builder info;
+    private DatabaseReference mDatabase, casesEndpoint, usersEndpoint;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +145,12 @@ public class NewCase extends AppCompatActivity {
             }
         });
 
+        //firebase code
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        casesEndpoint = mDatabase.child("cases");
+        usersEndpoint = mDatabase.child("users");
+       /* casesEndpoint.setValue("Case #1");
+        usersEndpoint.setValue("User A");*/
     }
 
     public void createCaseClicked(View view)
@@ -147,6 +162,10 @@ public class NewCase extends AppCompatActivity {
             Intent intent = new Intent(getBaseContext(), NewCaseCreated.class);
             intent.putExtra("Case", newCase);
             startActivity(intent);
+            //store in firebase db
+            String key = usersEndpoint.push().getKey();
+            newCase.setCaseId(key);
+            casesEndpoint.child(key).setValue(newCase);
         }
         else{
             Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();

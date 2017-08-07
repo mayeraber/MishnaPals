@@ -31,7 +31,6 @@ import java.util.List;
 
 public class MasechtosList extends AppCompatActivity {
 
-
     Masechta[] sederZeraim = new Masechta[11];
     Masechta[] sederMoed = new Masechta[12];
     Masechta[] sederNashim = new Masechta[7];
