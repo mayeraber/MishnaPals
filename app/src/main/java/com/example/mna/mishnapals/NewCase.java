@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -48,6 +50,7 @@ public class NewCase extends AppCompatActivity {
     DatePickerDialog datePickerDialog;
     AlertDialog.Builder info;
     private DatabaseReference mDatabase, casesEndpoint, usersEndpoint;
+    FirebaseAuth fireauth;
 
 
     @Override
@@ -57,6 +60,10 @@ public class NewCase extends AppCompatActivity {
         View background = findViewById(R.id.backgroundLayout);
         Drawable back = background.getBackground();
         back.setAlpha(50);
+
+
+
+
         final Calendar calendar = Calendar.getInstance();
         final Date date = new Date();
         dateNiftar = (EditText) findViewById(R.id.dateNiftar);
@@ -159,13 +166,18 @@ public class NewCase extends AppCompatActivity {
         {
             Case newCase = new Case(niftarName.getText().toString(), fatherName.getText().toString());
             newCase.setEndDate(dateNiftarCal);
-            Intent intent = new Intent(getBaseContext(), NewCaseCreated.class);
-            intent.putExtra("Case", newCase);
-            startActivity(intent);
+
             //store in firebase db
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             String key = usersEndpoint.push().getKey();
+            newCase.setUserNameOpened(user.getEmail());
+            newCase.createMasechtos();
             newCase.setCaseId(key);
             casesEndpoint.child(key).setValue(newCase);
+            Intent intent = new Intent(getBaseContext(), NewCaseCreated.class);
+            intent.putExtra("Case", newCase);
+            intent.putExtra("caseKey", key);
+            startActivity(intent);
         }
         else{
             Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();

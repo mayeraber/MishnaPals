@@ -14,8 +14,8 @@
         android:layout_gravity="bottom"
         android:layout_toLeftOf="@+id/masechtaName"
         android:layout_toStartOf="@+id/masechtaName"
-        android:paddingRight="13dp"
         android:paddingEnd="13dp"
+        android:paddingRight="13dp"
         android:paddingTop="10dp"
         android:text="TextView"
         android:textAlignment="gravity"
@@ -49,15 +49,16 @@
         android:layout_alignParentEnd="true" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/takenLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_red_light"
         android:text="@string/taken"
-        android:textSize="15sp"
+        android:textSize="20sp"
+        android:visibility="invisible"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/numMishnayos"
-        android:layout_toStartOf="@+id/numMishnayos" />
+        android:layout_toLeftOf="@+id/numPerakim"
+        android:layout_toStartOf="@+id/numPerakim" />
 
     <Button
         android:id="@+id/reserveMasechtaButton"
@@ -66,7 +67,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:text="@string/reserveMasechta" />
+        android:text="@string/reserveMasechta"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>

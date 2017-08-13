@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,15 @@ import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import org.w3c.dom.Text;
 import org.w3c.dom.TypeInfo;
 
@@ -28,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MasechtosList extends AppCompatActivity {
 
@@ -37,17 +48,30 @@ public class MasechtosList extends AppCompatActivity {
     Masechta[] sederNezikin = new Masechta[10];
     Masechta[] sederKodshim = new Masechta[11];
     Masechta[] sederTaharos = new Masechta[12];
-    ArrayList<Masechta[]> allSedarim = new ArrayList<Masechta[]>();
+    static ArrayList<Masechta[]> allSedarim = new ArrayList<Masechta[]>();
     String[] zeraimEng, zeraimHeb, moedEng , moedHeb, nashimEng, nashimHeb, nezikinEng, nezikinHeb, kodshimEng, kodshimHeb, taharosEng,taharosHeb;
     String[] sedarimEng = new String[]{"Zeraim", "Moed", "Nashim", "Nezikin", "Kodshim", "Taharos"};
     String[] sedarimHeb = new String[]{"זרעים", "מועד", "נשים", "נזיקין", "קדשים", "טהרות"};
     LinkedHashMap<String, Masechta[]> masechtos = new LinkedHashMap<>();
+    private DatabaseReference mDatabase, casesEndpoint, usersEndpoint;
+    DatabaseReference caseRef;
+    String caseKey;
+    String caseId;
+    TextView takenLabel;
+    Button reserveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_masechtos_list);
+        takenLabel = (TextView)findViewById(R.id.takenLabel);
+        reserveButton = (Button)findViewById(R.id.reserveMasechtaButton);
         createMasechtos();
+
+        caseId = getIntent().getStringExtra("caseId");
+        caseKey = getIntent().getStringExtra("caseKey");
+        //Log.d("caseKey", caseKey);
+
 
        /* TextView sederTitle = (TextView)findViewById(R.id.sederTitle);
         Drawable bubble = getResources().getDrawable(R.drawable.bubble);
@@ -79,6 +103,7 @@ public class MasechtosList extends AppCompatActivity {
         ListView listView = (ListView)findViewById(R.id.masechtosListView);
         listView.setAdapter(masechtaAdap);
 */
+
     }
 
     public void createMasechtos()
@@ -92,7 +117,7 @@ public class MasechtosList extends AppCompatActivity {
         moedHeb = new String[]{"שבת", "עירובין", "פסחים", "שקלים", "יומא", "סוכה", "ביצה", "ראש השנה", "תענית", "מגילה", "מועד קטן", "חגיגה"};
 
         nashimEng = new String[]{"Yevamos", "Kesubos", "Nedarim", "Nazir", "Sotah", "Gittin", "Kiddushin"};
-        nashimHeb = new String[]{"יבמות", "כתובות", "נדרים", "נזיר", "סוטה", "גיטין", "ק'דושין"};
+        nashimHeb = new String[]{"יבמות", "כתובות", "נדרים", "נזיר", "סוטה", "גיטין", "קידושין"};
 
         nezikinEng = new String[]{"Bava Kama", "Bava Metzia", "Bava Basra", "Sanherdin", "Makkos", "Shevuos", "Edios", "Avodah Zarah", "Avos", "Horios"};
         nezikinHeb = new String[]{"בבא קמא", "בבא מציעא", "בבא בתרא", "סנהדרין", "מכות", "שבועות", "עדיות", "עבודה זרה", "אבות", "הוריות"};
@@ -227,15 +252,18 @@ public class MasechtosList extends AppCompatActivity {
 
     private class ExpandableListAdapter extends BaseExpandableListAdapter
     {
-
         Context context;
         List<String> titles;
         HashMap<String, Masechta[]> details;
+        TextView takenLabel;
+        Button reserveButton;
         public ExpandableListAdapter(Context context, List<String> titles, HashMap<String, Masechta[]> details)
         {
             this.context = context;
             this.titles = titles;
             this.details = details;
+            takenLabel = (TextView)findViewById(R.id.takenLabel);
+            reserveButton = (Button)findViewById(R.id.reserveMasechtaButton);
         }
 
         @Override
@@ -281,45 +309,142 @@ public class MasechtosList extends AppCompatActivity {
                 convertView = layoutInflater.inflate(R.layout.seder_header, null);
             }
             TextView sederName = (TextView)convertView.findViewById(R.id.sederTitle);
-            TextView masechtosOpen = (TextView)convertView.findViewById(R.id.masechtosRemaining);
+            final TextView masechtosOpen = (TextView)convertView.findViewById(R.id.masechtosRemaining);
             sederName.setTypeface(null, Typeface.BOLD);
             sederName.setText((String)getGroup(groupPosition));
             int numOpen = details.get(titles.get(groupPosition)).length;
-            if(numOpen==10) {
-                masechtosOpen.setText("All Taken");
-                masechtosOpen.setBackgroundColor(0xFF00FF00);
-                masechtosOpen.setWidth(150);
-                masechtosOpen.setTextSize(15);
+            final String groupPos=""+groupPosition;
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    int openMasechtos=0;
+                    int counter=0;
+                    for(int i=0; i< dataSnapshot.child("cases").child(caseKey).child("masechtos").child(groupPos).getChildrenCount(); i++)
+                    {
+                            MasechtaStatus ms =  dataSnapshot.child("cases").child(caseKey).child("masechtos").child(groupPos).child(""+i).getValue(MasechtaStatus.class);
+                             if(!ms.status)
+                                openMasechtos += 1;
 
-            }
-            else {
-                masechtosOpen.setText("" + details.get(titles.get(groupPosition)).length);
+                    }
 
-                Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.bubble);
-                Bitmap.createScaledBitmap(bm, 10, 10, true);
+                    if(openMasechtos==0) {
+                        masechtosOpen.setText("All Taken");
+                        masechtosOpen.setBackgroundColor(0xFF00FF00);
+                        masechtosOpen.setWidth(150);
+                        masechtosOpen.setTextSize(15);
+                    }
+                    else {
+                        masechtosOpen.setText(""+openMasechtos);//("" + details.get(titles.get(groupPosition)).length);
 
-                //masechtosOpen.setBackgroundResource(R.drawable.bubble);
-                masechtosOpen.setBackgroundResource(R.drawable.bubble_circle);
-            }
+                        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.bubble);
+                        Bitmap.createScaledBitmap(bm, 10, 10, true);
+
+                        //masechtosOpen.setBackgroundResource(R.drawable.bubble);
+                        masechtosOpen.setBackgroundResource(R.drawable.bubble_circle);
+                    }
+
+                }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
 
             return convertView;
         }
 
         @Override
         public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-           if(convertView==null)
-           {
+          // if(convertView==null)
+          // {
                LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                convertView = inflater.inflate(R.layout.masechta_info, null);
-           }
+         //  }
+            final String groupPos = ""+groupPosition;
+            final String childPos = ""+childPosition;
+            Log.d("testing", groupPos+" "+childPos);
 
             TextView masechtaName = (TextView)convertView.findViewById(R.id.masechtaName);
             TextView perakim = (TextView)convertView.findViewById(R.id.numPerakim);
             TextView mishnayos = (TextView)convertView.findViewById(R.id.numMishnayos);
+            final TextView taken = (TextView)convertView.findViewById(R.id.takenLabel);
+            final Button reserve = (Button)convertView.findViewById(R.id.reserveMasechtaButton);
             masechtaName.setText((details.get(titles.get(groupPosition))[childPosition].hebName));
             perakim.setText((details.get(titles.get(groupPosition))[childPosition].numPerakim)+ " פרקים ");
             mishnayos.setText(""+  (details.get(titles.get(groupPosition))[childPosition].numMishnayos)+ " משניות ");
 
+            boolean masechtaStatus;
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    MasechtaStatus ms = dataSnapshot.child("cases").child(caseKey).child("masechtos").child(groupPos).child(childPos).getValue(MasechtaStatus.class);
+                    Log.d("testing", " "+ms.masechta);
+
+                    if(ms.status)
+                    {
+                        Log.d("testing", " TAKEN SHOW LABEL");
+                        taken.setVisibility(View.VISIBLE);
+                        reserve.setVisibility(View.GONE);
+                        //findViewById(R.id.takenLabel).setVisibility(View.VISIBLE);
+                        //findViewById(R.id.reserveMasechtaButton).setVisibility(View.GONE);
+                    }
+                    else{
+                        reserve.setVisibility((View.VISIBLE));
+                        taken.setVisibility(View.GONE);
+                        //findViewById(R.id.reserveMasechtaButton).setVisibility(View.VISIBLE);
+                        //findViewById(R.id.takenLabel).setVisibil ity(View.GONE);
+                        Log.d("testing", " NOT TAKEN SHOW BUTTON");
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            /*Query thisMasechta = ref.child("cases").orderByChild("caseId").equalTo(caseId);
+            Log.d("caseId12 ","hi"+caseId);
+            thisMasechta.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot snapshot:dataSnapshot.getChildren())
+                    {
+                        String str = dataSnapshot.getRef().child(groupPos).child(childPos).child("status").toString();
+                        //Log.d("testing count", ""+dataSnapshot.getChildrenCount());
+                       //DataSnapshot shot = dataSnapshot.child("status");
+                       // boolean val = (Boolean)(snapshot.getValue());
+                        Log.d("testing", ""+str);
+                        if(str.equals("false")) {
+                            Log.d("testing", " true_taken");
+                            findViewById(R.id.takenLabel).setVisibility(View.VISIBLE);
+                            findViewById(R.id.reserveMasechtaButton).setVisibility(View.GONE);
+                        }
+                        else {
+                            findViewById(R.id.reserveMasechtaButton).setVisibility(View.VISIBLE);
+                            findViewById(R.id.takenLabel).setVisibility(View.GONE);
+                            Log.d("testing", " false_notTaken");
+
+
+                        }
+
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+
+            });
+*/
             Button takeMasechta = (Button)convertView.findViewById(R.id.reserveMasechtaButton);
             takeMasechta.setOnClickListener(
                     new View.OnClickListener(){
@@ -340,8 +465,62 @@ public class MasechtosList extends AppCompatActivity {
 
         public void reserveButtonClicked(View view, int groupPosition, int childPosition)
         {
+
+
+
+
+            final int groupPos = groupPosition;
+            final int childPos = childPosition;
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+            Query userEmail = ref.child("users").orderByChild("userEmail").equalTo(user.getEmail());
+            Log.d("emailNow", user.getEmail());
+            userEmail.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot snapshot:dataSnapshot.getChildren())
+                        snapshot.getRef().child("cases").push().setValue(new CaseTakenInfo(details.get(titles.get(groupPos))[childPos].engName));
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            Log.d("CURRENTUSER", user.getUid());
+            mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
+            String key = mDatabase.getKey();
+
+            //String key = mDatabase.child("users").child(user.getUid()).push().getKey();
+          /*  ValueEventListener listener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User curUser = dataSnapshot.getValue(User.class);
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+
+            DatabaseReference curUser = mDatabase.child("users");
+            curUser.addValueEventListener(listener);
+*=
+
+            Map<String, Object> updates = new HashMap<>();
+            updates.put(user.getUid(), )*/
+            //mDatabase.child(user.getUid()).child("cases").setValue(details.get(titles.get(groupPosition))[childPosition]);
+            //mDatabase.child(key).setValue(details.get(titles.get(groupPosition))[childPosition]);
             Intent intent = new Intent(getBaseContext(), ConfirmMasechta.class);
             intent.putExtra("Masechta", details.get(titles.get(groupPosition))[childPosition]);
+            intent.putExtra("caseKey", caseKey);
+            intent.putExtra("seder", ""+groupPos);
+            intent.putExtra("masechtaNum", ""+childPos);
+            Log.d("hiiiiii55", caseKey+" "+groupPos+" "+childPos);
             startActivity(intent);
         }
     }
