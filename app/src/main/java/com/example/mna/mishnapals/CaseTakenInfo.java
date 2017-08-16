@@ -8,10 +8,13 @@ public class CaseTakenInfo {
 
     private String caseId;
     private String masechtaTaken;
+    public boolean finished;
 
     public CaseTakenInfo(){}
 
     public CaseTakenInfo(String masechta){masechtaTaken = masechta;}
+
+    public CaseTakenInfo(String masechta,String caseTakenId){masechtaTaken = masechta; caseId = caseTakenId;}
 
     public String getCaseId() {
         return caseId;
@@ -27,5 +30,13 @@ public class CaseTakenInfo {
 
     public void setMasechtaTaken(String masechtaTaken) {
         this.masechtaTaken = masechtaTaken;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }

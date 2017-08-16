@@ -21,6 +21,9 @@
         <activity android:name=".SedarimList" />
         <activity android:name=".ConfirmMasechta" />
         <activity android:name=".EmailPassword"/>
+        <activity android:name=".SearchResult"/>
+        <activity android:name=".MyMishnayos"/>
+        <activity android:name=".PublicCases"/>
         <activity android:name=".NewCaseCreated"></activity>
     </application>
 

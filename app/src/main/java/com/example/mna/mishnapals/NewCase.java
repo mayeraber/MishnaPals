@@ -51,6 +51,7 @@ public class NewCase extends AppCompatActivity {
     AlertDialog.Builder info;
     private DatabaseReference mDatabase, casesEndpoint, usersEndpoint;
     FirebaseAuth fireauth;
+    String caseId;
 
 
     @Override
@@ -65,7 +66,6 @@ public class NewCase extends AppCompatActivity {
 
 
         final Calendar calendar = Calendar.getInstance();
-        final Date date = new Date();
         dateNiftar = (EditText) findViewById(R.id.dateNiftar);
         niftarName = (EditText)findViewById(R.id.nameOfNiftar);
         fatherName = (EditText)findViewById(R.id.fatherName);
@@ -82,8 +82,9 @@ public class NewCase extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
                         dateNiftar.setText(arg2 + "/" + arg3 + "/" + arg1);
-
-                        dateNiftarCal.set(arg1, arg2, arg3);
+                        year = arg1;
+                        month = arg2;
+                        day = arg3;
                     }
                 }, calendar.get(YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
@@ -156,8 +157,6 @@ public class NewCase extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         casesEndpoint = mDatabase.child("cases");
         usersEndpoint = mDatabase.child("users");
-       /* casesEndpoint.setValue("Case #1");
-        usersEndpoint.setValue("User A");*/
     }
 
     public void createCaseClicked(View view)
@@ -165,19 +164,28 @@ public class NewCase extends AppCompatActivity {
         if(!isEmpty(niftarName) && !isEmpty(fatherName)&& !isEmpty(dateNiftar))
         {
             Case newCase = new Case(niftarName.getText().toString(), fatherName.getText().toString());
-            newCase.setEndDate(dateNiftarCal);
+            newCase.setDate(day, month, year);
 
             //store in firebase db
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             String key = usersEndpoint.push().getKey();
             newCase.setUserNameOpened(user.getEmail());
             newCase.createMasechtos();
-            newCase.setCaseId(key);
+
+            if(((CheckBox)findViewById(R.id.makePrivateCheckBox)).isChecked() && caseIdEntry.getText().toString()!=null){
+                newCase.setCaseId(caseIdEntry.getText().toString());
+                newCase.setPrivateCase(true);
+            }
+            else{
+                newCase.setCaseId(key);
+            }
+
             casesEndpoint.child(key).setValue(newCase);
             Intent intent = new Intent(getBaseContext(), NewCaseCreated.class);
             intent.putExtra("Case", newCase);
             intent.putExtra("caseKey", key);
             startActivity(intent);
+            this.finish();
         }
         else{
             Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();

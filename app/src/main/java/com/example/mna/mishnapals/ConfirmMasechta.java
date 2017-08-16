@@ -1,5 +1,7 @@
 package com.example.mna.mishnapals;
 
+import android.app.Activity;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +38,18 @@ public class ConfirmMasechta extends AppCompatActivity {
         TextView confirmMishnayos = (TextView)findViewById(R.id.numMishnayosConfirm);
         confirmMishnayos.setText(masechta.numMishnayos+"  משניות");
         Button reserveBut = (Button)findViewById(R.id.confirmMasechtaButton);
+
+        final Thread thread = new Thread(){
+            @Override
+            public void run(){
+                try{
+                    Thread.sleep(2500);
+                    ConfirmMasechta.this.finish();
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
         reserveBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,8 +57,18 @@ public class ConfirmMasechta extends AppCompatActivity {
                 dbRef.child("cases").child(caseKey).child("masechtos").child(""+seder).child(""+masechtaNum).child("status").setValue(true, new DatabaseReference.CompletionListener(){
                     public void onComplete(DatabaseError error, DatabaseReference ref){
                         Toast.makeText(getBaseContext(), "Success!!", Toast.LENGTH_SHORT).show();
+                     /*   new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ConfirmMasechta.this.finish();
+                            }
+                        },2500);
+                     */
+                        thread.start();
                     }
                 });
+
+
 
             }
         });

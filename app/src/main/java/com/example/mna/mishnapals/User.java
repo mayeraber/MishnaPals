@@ -10,7 +10,13 @@ import java.util.List;
 public class User
 {
     private String userId;
-
+    private  String userEmail;
+    private HashMap<String,Case> cases;
+    private List<Case> casesList;
+    public User()
+    {
+        cases = null;
+    }
     public String getUserEmail() {
         return userEmail;
     }
@@ -18,14 +24,6 @@ public class User
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
         casesList = null;
-    }
-
-    private  String userEmail;
-    private HashMap<String,Case> cases;
-    private List<Case> casesList;
-    public User()
-    {
-        cases = null;
     }
 
     public String getUserId() {

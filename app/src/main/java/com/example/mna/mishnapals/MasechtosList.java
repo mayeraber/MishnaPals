@@ -409,42 +409,7 @@ public class MasechtosList extends AppCompatActivity {
                 }
             });
 
-            /*Query thisMasechta = ref.child("cases").orderByChild("caseId").equalTo(caseId);
-            Log.d("caseId12 ","hi"+caseId);
-            thisMasechta.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for(DataSnapshot snapshot:dataSnapshot.getChildren())
-                    {
-                        String str = dataSnapshot.getRef().child(groupPos).child(childPos).child("status").toString();
-                        //Log.d("testing count", ""+dataSnapshot.getChildrenCount());
-                       //DataSnapshot shot = dataSnapshot.child("status");
-                       // boolean val = (Boolean)(snapshot.getValue());
-                        Log.d("testing", ""+str);
-                        if(str.equals("false")) {
-                            Log.d("testing", " true_taken");
-                            findViewById(R.id.takenLabel).setVisibility(View.VISIBLE);
-                            findViewById(R.id.reserveMasechtaButton).setVisibility(View.GONE);
-                        }
-                        else {
-                            findViewById(R.id.reserveMasechtaButton).setVisibility(View.VISIBLE);
-                            findViewById(R.id.takenLabel).setVisibility(View.GONE);
-                            Log.d("testing", " false_notTaken");
 
-
-                        }
-
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-
-            });
-*/
             Button takeMasechta = (Button)convertView.findViewById(R.id.reserveMasechtaButton);
             takeMasechta.setOnClickListener(
                     new View.OnClickListener(){
@@ -465,10 +430,6 @@ public class MasechtosList extends AppCompatActivity {
 
         public void reserveButtonClicked(View view, int groupPosition, int childPosition)
         {
-
-
-
-
             final int groupPos = groupPosition;
             final int childPos = childPosition;
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -480,7 +441,7 @@ public class MasechtosList extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for(DataSnapshot snapshot:dataSnapshot.getChildren())
-                        snapshot.getRef().child("cases").push().setValue(new CaseTakenInfo(details.get(titles.get(groupPos))[childPos].engName));
+                        snapshot.getRef().child("cases").push().setValue(new CaseTakenInfo(details.get(titles.get(groupPos))[childPos].engName, caseKey));
                 }
 
                 @Override
@@ -493,28 +454,6 @@ public class MasechtosList extends AppCompatActivity {
             mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
             String key = mDatabase.getKey();
 
-            //String key = mDatabase.child("users").child(user.getUid()).push().getKey();
-          /*  ValueEventListener listener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    User curUser = dataSnapshot.getValue(User.class);
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            };
-
-            DatabaseReference curUser = mDatabase.child("users");
-            curUser.addValueEventListener(listener);
-*=
-
-            Map<String, Object> updates = new HashMap<>();
-            updates.put(user.getUid(), )*/
-            //mDatabase.child(user.getUid()).child("cases").setValue(details.get(titles.get(groupPosition))[childPosition]);
-            //mDatabase.child(key).setValue(details.get(titles.get(groupPosition))[childPosition]);
             Intent intent = new Intent(getBaseContext(), ConfirmMasechta.class);
             intent.putExtra("Masechta", details.get(titles.get(groupPosition))[childPosition]);
             intent.putExtra("caseKey", caseKey);

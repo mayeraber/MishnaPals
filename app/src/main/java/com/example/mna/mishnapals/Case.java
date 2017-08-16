@@ -14,34 +14,23 @@ import java.util.List;
 public class Case implements Serializable {
     String firstName, fathersName, lastName;
     String userNameOpened;
-    Calendar endDate;
+    //Calendar endDate;
     String caseId;
     List<List<MasechtaStatus>> masechtos;
-    // boolean Berachos, Peah, Demai, Kelaim, Shviis, Terumos, Maaseros, MaaserSheini, Chalah, Orlah, Bikurim;
+    List<Integer> date;
+    boolean privateCase;
 
     Masechta[] takenMasechtos, availMasechtos;
 
     public Case() {
-
-
-       /* Berachos=false;
-        Peah=false;
-        Demai=false;
-        Kelaim=false;
-        Shviis=false;
-        Terumos=false;
-        Maaseros=false;
-        MaaserSheini=false;
-        Chalah=false;
-        Orlah=false;
-        Bikurim=false;*/
-
+        date = new ArrayList<>();
     }
 
     public Case(String fn, String fathersN) {
         firstName = fn;
 
         fathersName = fathersN;
+        date = new ArrayList<>();
     }
 
     public String getCaseId() {
@@ -82,14 +71,6 @@ public class Case implements Serializable {
 
     public void setUserNameOpened(String userNameOpened) {
         this.userNameOpened = userNameOpened;
-    }
-
-    public void setEndDate(Calendar endDate) {
-        this.endDate = endDate;
-    }
-
-    public Calendar getEndDate() {
-        return endDate;
     }
 
     public void createMasechtos() {
@@ -138,4 +119,22 @@ public class Case implements Serializable {
         masechtos.add(mase);
     }
 
+    public boolean isPrivateCase() {
+            return privateCase;
+        }
+
+    public void setPrivateCase(boolean privateCase) {
+            this.privateCase = privateCase;
+        }
+
+    public void setDate(int day, int month, int year)
+    {
+        date.add(year);
+        date.add(month);
+        date.add(day);
+    }
+    public List<Integer> getDate()
+    {
+        return date;
+    }
 }

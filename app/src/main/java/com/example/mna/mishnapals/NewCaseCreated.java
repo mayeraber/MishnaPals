@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NewCaseCreated extends AppCompatActivity {
 
@@ -30,10 +32,8 @@ public class NewCaseCreated extends AppCompatActivity {
         else
             niftarNameEng.setText(caseInfo.firstName+" ben "+caseInfo.fathersName);
 
-        SimpleDateFormat dateNiftarFormatted = new SimpleDateFormat("MMMM d, yyyy");
-        dateNiftarFormatted.setCalendar(caseInfo.getEndDate());
-        dateNiftar.setText(dateNiftarFormatted.format(caseInfo.getEndDate().getTime()));
-
+        List<Integer> date = caseInfo.getDate();
+        dateNiftar.setText(date.get(1)+"/"+date.get(2)+"/"+date.get(0));
         Button takeMishnayos = (Button)findViewById(R.id.takeMishnayosAfterReserve);
         takeMishnayos.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,7 +42,5 @@ public class NewCaseCreated extends AppCompatActivity {
                 Log.d("userIdInConfirm",caseInfo.getCaseId());
             }
         });
-
-       // dateNiftar.setText(caseInfo.endDate.toString());
     }
 }

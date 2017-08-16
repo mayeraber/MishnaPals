@@ -19,6 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class HomeScreen extends AppCompatActivity {
 
     Button searchCaseButton;
@@ -58,6 +60,13 @@ public class HomeScreen extends AppCompatActivity {
                 }
         );
 
+        final Button myMishnayos = (Button)findViewById(R.id.myMishnayosButton);
+        myMishnayos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myMishnayosClicked(v);
+            }
+        });
 
         searchCaseButton = (Button) findViewById(R.id.searchCaseButton);
         caseSearch = (EditText) findViewById(R.id.caseIdSearch);
@@ -65,21 +74,53 @@ public class HomeScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Intent intent = new Intent(getBaseContext(), SearchResult.class);
+                intent.putExtra("caseId", caseSearch.getText().toString());
+                startActivity(intent);
             }
         });
     }
+        public void buttonClicked(View view)
+        {
+            Intent intent = new Intent(getBaseContext(), NewCase.class);
+            startActivity(intent);
+        }
 
-    public void buttonClicked(View view)
-    {
-        Intent intent = new Intent(getBaseContext(), NewCase.class);
-        startActivity(intent);
-    }
+        public void viewAllClicked(View view)
+        {
+            DatabaseReference dbref = FirebaseDatabase.getInstance().getReference();
+            Query publicCase = dbref.child("cases").orderByChild("privateCase").equalTo(false);
+            publicCase.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    final ArrayList<Case> publicCases = new ArrayList<Case>();
+                    final ArrayList<String> publicCaseNames = new ArrayList<String>();
 
-    public void viewAllClicked(View view)
-    {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Log.d("CURRENTUSERHome", user.getUid());
-        Intent intent = new Intent(getBaseContext(), MasechtosList.class);
-        startActivity(intent);
+                    for(DataSnapshot ds : dataSnapshot.getChildren())
+                    {
+                        publicCases.add(ds.getValue(Case.class));
+                        publicCaseNames.add(ds.getValue(Case.class).getFirstName());
+                        Log.d("aaaaa", ""+ds.getValue(Case.class).firstName);
+                    }
+                    Intent intent = new Intent(getBaseContext(), PublicCases.class);
+                    intent.putExtra("cases", publicCaseNames);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            Log.d("CURRENTUSERHome", user.getUid());
+            Intent intent = new Intent(getBaseContext(), MasechtosList.class);
+            startActivity(intent);*/
+        }
+
+        public void myMishnayosClicked(View view)
+        {
+            startActivity(new Intent(getBaseContext(), MyMishnayos.class));
+        }
     }
-}
