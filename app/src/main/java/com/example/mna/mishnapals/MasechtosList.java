@@ -410,7 +410,7 @@ public class MasechtosList extends AppCompatActivity {
             });
 
 
-            Button takeMasechta = (Button)convertView.findViewById(R.id.reserveMasechtaButton);
+            Button takeMasechta = (Button)convertView. findViewById(R.id.reserveMasechtaButton);
             takeMasechta.setOnClickListener(
                     new View.OnClickListener(){
                         public void onClick(View view)

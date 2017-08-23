@@ -1,6 +1,7 @@
  package com.example.mna.mishnapals;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -40,25 +41,26 @@ public class MyMishnayos extends AppCompatActivity {
         final ListView listMishnayos = (ListView)findViewById(R.id.listMishnayos);
 
         final ArrayList<CaseTakenInfo> cases = new ArrayList<>();
+        final ListAdapter listAdapter = new ListAdapter(getBaseContext() , R.layout.my_masechta, cases);
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Query currUser = ref.child("users").orderByChild("userEmail").equalTo(user.getEmail());//.getRef().child("cases");
         //Log.d("curr", currUser.getKey());
-        currUser.addValueEventListener(new ValueEventListener() {
+        currUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                cases.clear();
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                      dataSnapshot = ds.child("cases");}
 
                 for(DataSnapshot userCase : dataSnapshot.getChildren()){
                    CaseTakenInfo caseTaken = userCase.getValue(CaseTakenInfo.class);
-                    Log.d("curr6", caseTaken.getMasechtaTaken());
+                    Log.d("curr6", caseTaken.getMasechtaTaken()+" "+caseTaken.isFinished());
                     cases.add(caseTaken);
                 }
-                ListAdapter listAdapter = new ListAdapter(getBaseContext() , R.layout.my_masechta, cases);
                 listMishnayos.setAdapter(listAdapter);
+
             }
 
             @Override
@@ -67,10 +69,16 @@ public class MyMishnayos extends AppCompatActivity {
             }
         });
 
+
+
         listMishnayos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent intent = new Intent(getBaseContext(), CompletedMasechta.class);
+                CaseTakenInfo caseTakenInfo = cases.get(position);
+                intent.putExtra("caseId", cases.get(position).getCaseId());
+                intent.putExtra("masechta", cases.get(position).getMasechtaTaken());
+                startActivity(intent);
             }
         });
     }
@@ -106,17 +114,21 @@ public class MyMishnayos extends AppCompatActivity {
                 holder = (ViewHolder)v.getTag();
             }
 
-                CaseTakenInfo caseTaken = getItem(position);
+                final CaseTakenInfo caseTaken = getItem(position);
                 Log.d("aaaaa", "" + caseTaken.getMasechtaTaken());
 
                 if (caseTaken != null) {
                     holder.masechta.setText("Masechta: "+caseTaken.getMasechtaTaken());
+                    final TextView completionStatus = (TextView) v.findViewById(R.id.completionStatus);
                     final TextView nameNiftar = (TextView) v.findViewById(R.id.nameNiftar);
-                    DatabaseReference dref = dbref.child(caseTaken.getCaseId()).child("firstName");
-                    dref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    DatabaseReference dref = dbref.child(caseTaken.getCaseId());
+                    dref = dref.child("firstName");
+                    dref.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             nameNiftar.setText("Name: "+((String)dataSnapshot.getValue()));
+                            completionStatus.setText("Status: "+(caseTaken.isFinished()?"Completed":"Not Completed"));
+                            Log.d("curr6", "resetStat "+caseTaken.getMasechtaTaken());
                         }
 
                         @Override
