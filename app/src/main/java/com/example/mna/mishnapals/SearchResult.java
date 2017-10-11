@@ -42,6 +42,7 @@ public class SearchResult extends AppCompatActivity{
                         searchResultName.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                SearchResult.this.finish();
                                 Intent intent = new Intent(getBaseContext(), MasechtosList.class);
                                 intent.putExtra("caseKey", snap.getRef().getKey());
                                 startActivity(intent);

@@ -10,9 +10,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
@@ -30,7 +35,7 @@ public class ConfirmMasechta extends AppCompatActivity {
         final String seder = getIntent().getStringExtra("seder");
         final String masechtaNum = getIntent().getStringExtra("masechtaNum");
 
-        Masechta masechta = (Masechta) getIntent().getSerializableExtra("Masechta");
+        final Masechta masechta = (Masechta) getIntent().getSerializableExtra("Masechta");
         TextView confirmMasechta = (TextView)findViewById(R.id.masechtaConfirmDetails);
         confirmMasechta.setText("מסכת "+masechta.hebName);
         TextView confirmPerakim = (TextView)findViewById(R.id.numPerakimConfirm);
@@ -53,6 +58,26 @@ public class ConfirmMasechta extends AppCompatActivity {
         reserveBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                Query userEmail = ref.child("users").orderByChild("userEmail").equalTo(user.getEmail());
+                Log.d("emailNow", user.getEmail());
+                userEmail.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot snapshot:dataSnapshot.getChildren())
+                            snapshot.getRef().child("cases").push().setValue(new CaseTakenInfo(masechta.engName, caseKey));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
                 Log.d("hiiiiiiiii", caseKey+""+seder+""+masechtaNum);
                 dbRef.child("cases").child(caseKey).child("masechtos").child(""+seder).child(""+masechtaNum).child("status").setValue(true, new DatabaseReference.CompletionListener(){
                     public void onComplete(DatabaseError error, DatabaseReference ref){

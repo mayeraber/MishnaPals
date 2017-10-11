@@ -55,7 +55,7 @@ public class MyMishnayos extends AppCompatActivity {
                      dataSnapshot = ds.child("cases");}
 
                 for(DataSnapshot userCase : dataSnapshot.getChildren()){
-                   CaseTakenInfo caseTaken = userCase.getValue(CaseTakenInfo.class);
+                       CaseTakenInfo caseTaken = userCase.getValue(CaseTakenInfo.class);
                     Log.d("curr6", caseTaken.getMasechtaTaken()+" "+caseTaken.isFinished());
                     cases.add(caseTaken);
                 }
@@ -74,11 +74,15 @@ public class MyMishnayos extends AppCompatActivity {
         listMishnayos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getBaseContext(), CompletedMasechta.class);
-                CaseTakenInfo caseTakenInfo = cases.get(position);
-                intent.putExtra("caseId", cases.get(position).getCaseId());
-                intent.putExtra("masechta", cases.get(position).getMasechtaTaken());
-                startActivity(intent);
+                if(!cases.get(position).isFinished()) {
+                    Intent intent = new Intent(getBaseContext(), CompletedMasechta.class);
+                    CaseTakenInfo caseTakenInfo = cases.get(position);
+                    intent.putExtra("caseId", cases.get(position).getCaseId());
+                    intent.putExtra("masechta", cases.get(position).getMasechtaTaken());
+                    startActivity(intent);
+                    //TODO maybe change to manually update the listitem instead of ending activity and then resarting
+                    MyMishnayos.this.finish();
+                }
             }
         });
     }

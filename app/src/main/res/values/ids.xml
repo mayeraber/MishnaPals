@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="viewAllAvailButton" type="id">View All Available Mishnayos</item>
+    <item name="SignOutMenuItem" type="id">SignOutItem</item>
+    <item name="completedTag" type="id" />
 </resources>

@@ -18,6 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,9 +63,6 @@ public class NewCase extends AppCompatActivity {
         Drawable back = background.getBackground();
         back.setAlpha(50);
 
-
-
-
         final Calendar calendar = Calendar.getInstance();
         dateNiftar = (EditText) findViewById(R.id.dateNiftar);
         niftarName = (EditText)findViewById(R.id.nameOfNiftar);
@@ -92,8 +90,6 @@ public class NewCase extends AppCompatActivity {
         });
 
 
-
-
         final CheckBox makePrivate = (CheckBox) findViewById(R.id.makePrivateCheckBox);
         makePrivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -103,6 +99,17 @@ public class NewCase extends AppCompatActivity {
                     caseIdConfirm.setVisibility(View.VISIBLE);//setEnabled(true);
                     caseIDLabel.setVisibility(View.VISIBLE);
                     confirmIDLabel.setVisibility(View.VISIBLE);
+
+                    if(getResources().getConfiguration().orientation==2){
+                        final ScrollView sv = (ScrollView)findViewById(R.id.scrollNewCase);
+                        sv.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                sv.scrollTo(0, sv.getBottom());
+                            }
+                        });
+                    }
+
                 } else {
                     caseIdEntry.setVisibility(View.GONE);
                     caseIdConfirm.setVisibility(View.GONE);

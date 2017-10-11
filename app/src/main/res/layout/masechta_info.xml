@@ -52,13 +52,17 @@
         android:id="@+id/takenLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_light"
-        android:text="@string/taken"
-        android:textSize="20sp"
-        android:visibility="invisible"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/numPerakim"
-        android:layout_toStartOf="@+id/numPerakim" />
+        android:layout_toStartOf="@+id/numPerakim"
+        android:background="#FF4C4C"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:text="@string/taken"
+        android:textSize="24sp"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/reserveMasechtaButton"
@@ -70,5 +74,18 @@
         android:text="@string/reserveMasechta"
         android:visibility="invisible" />
 
+    <TextView
+        android:id="@+id/completedTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="4dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/numMishnayos"
+        android:layout_toStartOf="@+id/numMishnayos"
+        android:background="#6533FF33"
+        android:rotation="-45"
+        android:text="completed"
+        android:textSize="12sp"
+        android:visibility="gone" />
 
 </RelativeLayout>

@@ -373,6 +373,7 @@ public class MasechtosList extends AppCompatActivity {
             TextView mishnayos = (TextView)convertView.findViewById(R.id.numMishnayos);
             final TextView taken = (TextView)convertView.findViewById(R.id.takenLabel);
             final Button reserve = (Button)convertView.findViewById(R.id.reserveMasechtaButton);
+            final TextView completedLabel = (TextView)convertView.findViewById(R.id.completedTag);
             masechtaName.setText((details.get(titles.get(groupPosition))[childPosition].hebName));
             perakim.setText((details.get(titles.get(groupPosition))[childPosition].numPerakim)+ " פרקים ");
             mishnayos.setText(""+  (details.get(titles.get(groupPosition))[childPosition].numMishnayos)+ " משניות ");
@@ -391,6 +392,10 @@ public class MasechtosList extends AppCompatActivity {
                         Log.d("testing", " TAKEN SHOW LABEL");
                         taken.setVisibility(View.VISIBLE);
                         reserve.setVisibility(View.GONE);
+                        //if((boolean)dataSnapshot.child("cases").child(caseKey).child("masechtos").child(groupPos).child(childPos).child("completed").getValue()){
+                        if(ms.completed){
+                            completedLabel.setVisibility(View.VISIBLE);
+                        }
                         //findViewById(R.id.takenLabel).setVisibility(View.VISIBLE);
                         //findViewById(R.id.reserveMasechtaButton).setVisibility(View.GONE);
                     }
@@ -433,7 +438,7 @@ public class MasechtosList extends AppCompatActivity {
             final int groupPos = groupPosition;
             final int childPos = childPosition;
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+/*
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
             Query userEmail = ref.child("users").orderByChild("userEmail").equalTo(user.getEmail());
             Log.d("emailNow", user.getEmail());
@@ -449,7 +454,7 @@ public class MasechtosList extends AppCompatActivity {
 
                 }
             });
-
+*/
             Log.d("CURRENTUSER", user.getUid());
             mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
             String key = mDatabase.getKey();

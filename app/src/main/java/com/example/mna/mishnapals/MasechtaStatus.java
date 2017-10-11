@@ -11,12 +11,14 @@ public class MasechtaStatus implements Serializable
 
     String masechta;
     boolean status;
+    boolean completed;
 
     public MasechtaStatus(){}
     public MasechtaStatus(String masechtaName)//, boolean stat)
     {
         masechta = masechtaName;
         status = false;
+        completed = false;
         //status = stat;
     }
 
@@ -36,6 +38,13 @@ public class MasechtaStatus implements Serializable
         this.status = status;
     }
 
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 
 
 }

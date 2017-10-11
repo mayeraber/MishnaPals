@@ -36,8 +36,8 @@ public class CompletedMasechta extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
-                Query currUser = ref.orderByChild("userEmail").equalTo(user.getEmail());
+                final DatabaseReference refRoot = FirebaseDatabase.getInstance().getReference();
+                Query currUser = refRoot.child("users").orderByChild("userEmail").equalTo(user.getEmail());
                 currUser.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -45,15 +45,19 @@ public class CompletedMasechta extends AppCompatActivity {
                         for(DataSnapshot ds : dataSnapshot.getChildren()){
                             dataSnapshot = ds.child("cases");}
 
-                        DatabaseReference ref = dataSnapshot.getRef();//.child(getIntent().getStringExtra("caseId")).child("finished").setValue(true);
+                        final DatabaseReference ref = dataSnapshot.getRef();//.child(getIntent().getStringExtra("caseId")).child("finished").setValue(true);
                         Query query = ref.orderByChild("caseId").equalTo(getIntent().getStringExtra("caseId"));
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                                     Log.d("aaaab", getIntent().getStringExtra("masechta")+" "+getIntent().getStringExtra("caseId"));
-                                    if(ds.child("masechtaTaken").getValue().equals(getIntent().getStringExtra("masechta")))
+                                    String masechtaCompleted = getIntent().getStringExtra("masechta");
+                                    if(ds.child("masechtaTaken").getValue().equals(masechtaCompleted))
                                         ds.child("finished").getRef().setValue(true);
+                                    Log.d("cholHamoed", ""+(getIntent().getStringExtra("caseId")+" "+masechtaCompleted)+" "+UtilMishnayosNumbers.mishnaNums.get(masechtaCompleted).getSederNum());
+                                    //Query query1 = refRoot.child("cases").orderByChild()
+                                    refRoot.child("cases").child(getIntent().getStringExtra("caseId")).child("masechtos").child(""+UtilMishnayosNumbers.mishnaNums.get(masechtaCompleted).getSederNum()).child(""+UtilMishnayosNumbers.mishnaNums.get(masechtaCompleted).getMasechtaNum()).child("completed").getRef().setValue(true);
                                 }
                             }
 
@@ -62,9 +66,7 @@ public class CompletedMasechta extends AppCompatActivity {
 
                             }
                         });
-
                     }
-
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -75,6 +77,7 @@ public class CompletedMasechta extends AppCompatActivity {
                     @Override
                     public void run() {
                         startActivity(new Intent(getBaseContext(), MyMishnayos.class));
+                        CompletedMasechta.this.finish();
                     }
                 },1000);
             }

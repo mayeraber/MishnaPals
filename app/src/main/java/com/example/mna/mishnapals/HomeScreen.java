@@ -2,14 +2,22 @@ package com.example.mna.mishnapals;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,23 +29,63 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static com.example.mna.mishnapals.SignInOptions.googleApiClient;
+
 public class HomeScreen extends AppCompatActivity {
 
     Button searchCaseButton;
     EditText caseSearch;
+    private FirebaseAuth fAuth;
+
     //FirebaseDatabase fbdb;
     //DatabaseReference ref;
     FirebaseUser user;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        fAuth = FirebaseAuth.getInstance();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        googleApiClient= new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                    }
+                })
+                .addApiIfAvailable(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        MenuInflater inflator = getMenuInflater();
+        inflator.inflate(R.menu.mishna_pals_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        fAuth.signOut();
+        Auth.GoogleSignInApi.signOut(googleApiClient);
+        startActivity(new Intent(getBaseContext(), SignInOptions.class));
+        HomeScreen.this.finish();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-//if(user==null)
-        startActivity(new Intent(getBaseContext(), EmailPassword.class));
+    if(user==null)
+    {
+           // startActivity(new Intent(getBaseContext(), EmailPassword.class));
+
+        startActivity(new Intent(getBaseContext(), SignInOptions.class));
+            HomeScreen.this.finish();
+    }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
+        //setContentView(R.layout.home_screen_horizontal);
         View layout = findViewById(R.id.backgroundLayoutHome);
         Drawable background = layout.getBackground();
         background.setAlpha(50);
