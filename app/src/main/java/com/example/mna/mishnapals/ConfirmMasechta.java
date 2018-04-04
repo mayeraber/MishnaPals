@@ -1,6 +1,15 @@
+/*
+Display a confirmation screen with the case and masechta the user selected. When user confirms the selection
+update the db, set alarm, and display toast confirmation message
+ */
 package com.example.mna.mishnapals;
 
-import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import java.util.GregorianCalendar;
+
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,11 +28,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 public class ConfirmMasechta extends AppCompatActivity {
 
     DatabaseReference dbRef;
+    String caseTakenKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +40,7 @@ public class ConfirmMasechta extends AppCompatActivity {
         dbRef = FirebaseDatabase.getInstance().getReference();
 
         final String caseKey = getIntent().getStringExtra("caseKey");
+        caseTakenKey = caseKey;
         final String seder = getIntent().getStringExtra("seder");
         final String masechtaNum = getIntent().getStringExtra("masechtaNum");
 
@@ -43,22 +52,27 @@ public class ConfirmMasechta extends AppCompatActivity {
         TextView confirmMishnayos = (TextView)findViewById(R.id.numMishnayosConfirm);
         confirmMishnayos.setText(masechta.numMishnayos+"  משניות");
         Button reserveBut = (Button)findViewById(R.id.confirmMasechtaButton);
-
-        final Thread thread = new Thread(){
+        /*final Thread thread = new Thread(){
             @Override
             public void run(){
                 try{
-                    Thread.sleep(2500);
-                    ConfirmMasechta.this.finish();
+                    //Thread.sleep(2500);
+                    //ConfirmMasechta.this.finish();
                 } catch(Exception e){
                     e.printStackTrace();
                 }
             }
-        };
+        };*/
+        /*
+        When user confirms selection, add a new 'CaseTakenInfo' to the user's branch in the db, and then set
+        the masechta status to true (i.e. taken) in the case's branch in the db. Also set alarm to remind user
+        about the masechta taken. Display progress circle as db is updated.
+        Lastly, display a toast message that the reservation was successful
+         */
         reserveBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                findViewById(R.id.timerCircle).setVisibility(View.VISIBLE);
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -76,26 +90,64 @@ public class ConfirmMasechta extends AppCompatActivity {
 
                     }
                 });
-
+                setAlarm();
 
                 Log.d("hiiiiiiiii", caseKey+""+seder+""+masechtaNum);
                 dbRef.child("cases").child(caseKey).child("masechtos").child(""+seder).child(""+masechtaNum).child("status").setValue(true, new DatabaseReference.CompletionListener(){
                     public void onComplete(DatabaseError error, DatabaseReference ref){
+
+
+                        //add event to users calendar
+                       /* Intent calIntent = new Intent(Intent.ACTION_INSERT);
+                        calIntent.setType("vnd.android.cursor.item/event");
+                        calIntent.putExtra(CalendarContract.Events.TITLE, "MishnaPals");
+                        calIntent.putExtra(CalendarContract.Events.DESCRIPTION, masechta.engName);
+                        calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, Calendar.getInstance().getTimeInMillis());
+                        calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, Calendar.getInstance().getTimeInMillis());
+                        calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
+                        startActivity(calIntent);
+                        */
+                        findViewById(R.id.timerCircle).setVisibility(View.INVISIBLE);
+
                         Toast.makeText(getBaseContext(), "Success!!", Toast.LENGTH_SHORT).show();
-                     /*   new Handler().postDelayed(new Runnable() {
+                        new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 ConfirmMasechta.this.finish();
                             }
                         },2500);
-                     */
-                        thread.start();
+
+                        //thread.start();
                     }
                 });
+            }
+        });
+    }
 
+    //TODO work more on the alarm
+    public void setAlarm()
+    {
+        //get date to parse https://stackoverflow.com/questions/12473550/how-to-convert-string-date-to-long-millseconds and then send to notification
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
 
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String endYear = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("0").getValue().toString();
+                String endMonth = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("1").getValue().toString();
+                String endDay = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("2").getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+        Long time = new GregorianCalendar().getTimeInMillis()+30000;
+        Intent alarmIntent = new Intent(this, AlarmSetter.class);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, time, PendingIntent.getBroadcast(this, 1, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        //Toast.makeText(this, "Alarm scheduled", Toast.LENGTH_LONG).show();
     }
 }

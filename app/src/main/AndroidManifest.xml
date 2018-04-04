@@ -3,6 +3,8 @@
     package="com.example.mna.mishnapals">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
 
     <application
         android:allowBackup="true"
@@ -34,6 +36,7 @@
         <activity android:name=".SignInOptions" />
         <activity android:name=".GoogleSignIn" >
         </activity>
+        <receiver android:name=".AlarmSetter"/>
     </application>
 
 </manifest>

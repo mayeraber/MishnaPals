@@ -1,3 +1,7 @@
+/*
+When user taps 'Completed' to enter that a masechta was completed, the database is updated to reflect that;
+both in the user's branch and in the case's branch
+ */
 package com.example.mna.mishnapals;
 
 import android.content.Intent;
@@ -24,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class CompletedMasechta extends AppCompatActivity {
     public void onCreate(Bundle savedInstance){
+        UtilMishnayosNumbers u = new UtilMishnayosNumbers();
         super.onCreate(savedInstance);
         setContentView(R.layout.completed_masechta);
 
@@ -47,6 +52,10 @@ public class CompletedMasechta extends AppCompatActivity {
 
                         final DatabaseReference ref = dataSnapshot.getRef();//.child(getIntent().getStringExtra("caseId")).child("finished").setValue(true);
                         Query query = ref.orderByChild("caseId").equalTo(getIntent().getStringExtra("caseId"));
+                        /*
+                        Go through all masechtos taken by this user until you reach the one being seeked, then set it's
+                        completion flag to true. Then set the completion flag for the masechta in its case to true as well
+                         */
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {

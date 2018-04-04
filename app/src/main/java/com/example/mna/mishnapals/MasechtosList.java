@@ -1,3 +1,9 @@
+/*
+List of masechtos to show all masechtos of the case with their status' and button for reservation which starts 'ConfirmMasechta' activity
+Designs the expandable drop-down list, including bubble count of number of avail masechtos for each seder in the group-header, and masechta
+info on each child with status and option to register if masechta is available
+This activity is called from 'NewCaseCreated' and from 'SeasrchResult'
+ */
 package com.example.mna.mishnapals;
 
 import android.content.Context;
@@ -66,25 +72,22 @@ public class MasechtosList extends AppCompatActivity {
         setContentView(R.layout.activity_masechtos_list);
         takenLabel = (TextView)findViewById(R.id.takenLabel);
         reserveButton = (Button)findViewById(R.id.reserveMasechtaButton);
-        createMasechtos();
+        createMasechtos();  //method to populate the 'allSedarim' ArrayList and 'masechtos' hashmap
 
         caseId = getIntent().getStringExtra("caseId");
         caseKey = getIntent().getStringExtra("caseKey");
         //Log.d("caseKey", caseKey);
 
-
        /* TextView sederTitle = (TextView)findViewById(R.id.sederTitle);
         Drawable bubble = getResources().getDrawable(R.drawable.bubble);
         bubble.setBounds(0,0,20,20);
         sederTitle.setCompoundDrawables(bubble, null, null, null);*/
-       // ListView listView = (ListView)findViewById(R.id.masechtosListView);
+        // ListView listView = (ListView)findViewById(R.id.masechtosListView);
         TextView sederH = (TextView)findViewById(R.id.sederTitle);
-
 
         ExpandableListView expandableListView = (ExpandableListView)findViewById(R.id.masechtosListView);
         LinkedHashMap<String, Masechta[]> details = masechtos;
-        List<String> titles = new ArrayList<String>(masechtos.keySet());
-
+        List<String> titles = new ArrayList<>(masechtos.keySet());
 
         ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(this, titles, details);
         expandableListView.setAdapter(expandableListAdapter);
@@ -106,10 +109,11 @@ public class MasechtosList extends AppCompatActivity {
 
     }
 
+    /*
+    Create a 'Masechta' object for every masechta, add each to its respective seder, then add all sedarim to the 'allSedarim' ArrayList and to 'masechtos' hashmap
+     */
     public void createMasechtos()
     {
-
-
         zeraimEng = new String[]{"Berachos", "Peah", "Demai", "Kelaim", "Shviis", "Terumos", "Maaseros", "Maaser Sheini", "Chalah", "Orlah", "Bikurim"};
         zeraimHeb = new String[]{"ברכות", "פאה", "דמאי ", "כלאים", "שביעית", "תרומות", "מעשרות", "מעשר שני", "חלה", "ערלה", "ביכורים"};
 
@@ -209,9 +213,6 @@ public class MasechtosList extends AppCompatActivity {
         masechtos.put(sedarimHeb[3], sederNezikin);
         masechtos.put(sedarimHeb[4], sederKodshim);
         masechtos.put(sedarimHeb[5], sederTaharos);
-
-
-
     }
 
 /*
@@ -250,6 +251,9 @@ public class MasechtosList extends AppCompatActivity {
     }
 */
 
+    /*
+    Designs the expandable list; the group-headers in one method, and the children in another
+     */
     private class ExpandableListAdapter extends BaseExpandableListAdapter
     {
         Context context;
@@ -301,6 +305,9 @@ public class MasechtosList extends AppCompatActivity {
             return false;
         }
 
+        /*
+        Designs the group-headers, including a bubble count of number of available masechtos in the seder
+         */
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             if(convertView==null)
@@ -357,6 +364,9 @@ public class MasechtosList extends AppCompatActivity {
             return convertView;
         }
 
+        /*
+        Designs the children - with masechta info, availability status and reservation button
+         */
         @Override
         public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
           // if(convertView==null)
@@ -433,6 +443,9 @@ public class MasechtosList extends AppCompatActivity {
             return false;
         }
 
+        /*
+        When a masechta is chosen, collect all needed info and start 'ConfirmMasechta' activity and pass in the info
+         */
         public void reserveButtonClicked(View view, int groupPosition, int childPosition)
         {
             final int groupPos = groupPosition;

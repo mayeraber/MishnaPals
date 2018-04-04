@@ -1,10 +1,16 @@
 package com.example.mna.mishnapals;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.app.AlertDialog;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -65,8 +71,8 @@ public class NewCase extends AppCompatActivity {
 
         final Calendar calendar = Calendar.getInstance();
         dateNiftar = (EditText) findViewById(R.id.dateNiftar);
-        niftarName = (EditText)findViewById(R.id.nameOfNiftar);
-        fatherName = (EditText)findViewById(R.id.fatherName);
+        niftarName = (EditText) findViewById(R.id.nameOfNiftar);
+        fatherName = (EditText) findViewById(R.id.fatherName);
 
         caseIdEntry = (EditText) findViewById(R.id.caseIdEntry);
         caseIdConfirm = (EditText) findViewById(R.id.caseIDConfirm);
@@ -76,13 +82,13 @@ public class NewCase extends AppCompatActivity {
         dateNiftar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               datePickerDialog = new DatePickerDialog(NewCase.this, new DatePickerDialog.OnDateSetListener() {
+                datePickerDialog = new DatePickerDialog(NewCase.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
                         dateNiftar.setText(arg2 + "/" + arg3 + "/" + arg1);
                         year = arg1;
-                        month = arg2;
-                        day = arg3;
+                        month = arg2+1;
+                        day = arg3 ;
                     }
                 }, calendar.get(YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
@@ -100,8 +106,8 @@ public class NewCase extends AppCompatActivity {
                     caseIDLabel.setVisibility(View.VISIBLE);
                     confirmIDLabel.setVisibility(View.VISIBLE);
 
-                    if(getResources().getConfiguration().orientation==2){
-                        final ScrollView sv = (ScrollView)findViewById(R.id.scrollNewCase);
+                    if (getResources().getConfiguration().orientation == 2) {
+                        final ScrollView sv = (ScrollView) findViewById(R.id.scrollNewCase);
                         sv.post(new Runnable() {
                             @Override
                             public void run() {
@@ -132,18 +138,18 @@ public class NewCase extends AppCompatActivity {
         });
         final AlertDialog dialog = info.create();
 
-        Button privateInfo = (Button)findViewById(R.id.privateInfoButton);
+        Button privateInfo = (Button) findViewById(R.id.privateInfoButton);
 
-        privateInfo.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
+        privateInfo.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
 
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialog) {
 
-                        final Button okButton = ((AlertDialog)dialog).getButton(AlertDialog.BUTTON_NEUTRAL);
+                        final Button okButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEUTRAL);
                         LinearLayout.LayoutParams butonLayout = (LinearLayout.LayoutParams) okButton.getLayoutParams();
-                        butonLayout.width= ViewGroup.LayoutParams.MATCH_PARENT;
+                        butonLayout.width = ViewGroup.LayoutParams.MATCH_PARENT;
                         okButton.setLayoutParams(butonLayout);
                     }
                 });
@@ -152,10 +158,9 @@ public class NewCase extends AppCompatActivity {
             }
         });
 
-        Button createCaseButton = (Button)findViewById(R.id.createCaseButton);
-        createCaseButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view)
-            {
+        Button createCaseButton = (Button) findViewById(R.id.createCaseButton);
+        createCaseButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 createCaseClicked(view);
             }
         });
@@ -166,10 +171,8 @@ public class NewCase extends AppCompatActivity {
         usersEndpoint = mDatabase.child("users");
     }
 
-    public void createCaseClicked(View view)
-    {
-        if(!isEmpty(niftarName) && !isEmpty(fatherName)&& !isEmpty(dateNiftar))
-        {
+    public void createCaseClicked(View view) {
+        if (!isEmpty(niftarName) && !isEmpty(fatherName) && !isEmpty(dateNiftar)) {
             Case newCase = new Case(niftarName.getText().toString(), fatherName.getText().toString());
             newCase.setDate(day, month, year);
 
@@ -179,11 +182,10 @@ public class NewCase extends AppCompatActivity {
             newCase.setUserNameOpened(user.getEmail());
             newCase.createMasechtos();
 
-            if(((CheckBox)findViewById(R.id.makePrivateCheckBox)).isChecked() && caseIdEntry.getText().toString()!=null){
+            if (((CheckBox) findViewById(R.id.makePrivateCheckBox)).isChecked() && caseIdEntry.getText().toString() != null) {
                 newCase.setCaseId(caseIdEntry.getText().toString());
                 newCase.setPrivateCase(true);
-            }
-            else{
+            } else {
                 newCase.setCaseId(key);
             }
 
@@ -193,16 +195,16 @@ public class NewCase extends AppCompatActivity {
             intent.putExtra("caseKey", key);
             startActivity(intent);
             this.finish();
-        }
-        else{
+        } else {
             Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public boolean isEmpty(EditText editText)
-    {
-        if(editText.getText().toString().trim().length()==0)
+    public boolean isEmpty(EditText editText) {
+        if (editText.getText().toString().trim().length() == 0)
             return true;
         return false;
     }
+
 }
+

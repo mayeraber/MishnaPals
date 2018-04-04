@@ -1,30 +1,40 @@
- package com.example.mna.mishnapals;
+/*
+Displays list of user's taken masechtos and allows user to choose one and open 'CompletedMasechta' activity
+to then be able to change status to completed
+ */
+package com.example.mna.mishnapals;
 
 import android.content.Context;
-import android.content.Intent;
+        import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+        import android.support.v7.app.AppCompatActivity;
+        import android.util.Log;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.AdapterView;
+        import android.widget.ArrayAdapter;
+        import android.widget.ListView;
+        import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.auth.FirebaseUser;
+        import com.google.firebase.database.DataSnapshot;
+        import com.google.firebase.database.DatabaseError;
+        import com.google.firebase.database.DatabaseReference;
+        import com.google.firebase.database.FirebaseDatabase;
+        import com.google.firebase.database.Query;
+        import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,13 +48,17 @@ public class MyMishnayos extends AppCompatActivity {
         super.onCreate(savedInstance);
         setContentView(R.layout.my_mishnayos);
 
-        final ListView listMishnayos = (ListView)findViewById(R.id.listMishnayos);
+        final ListView listMishnayos = findViewById(R.id.listMishnayos);
 
         final ArrayList<CaseTakenInfo> cases = new ArrayList<>();
         final ListAdapter listAdapter = new ListAdapter(getBaseContext() , R.layout.my_masechta, cases);
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+
+        /*
+        Populate 'cases' arraylist from user's branch in db with the cases this user participates in
+         */
         Query currUser = ref.child("users").orderByChild("userEmail").equalTo(user.getEmail());//.getRef().child("cases");
         //Log.d("curr", currUser.getKey());
         currUser.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -52,10 +66,10 @@ public class MyMishnayos extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 cases.clear();
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
-                     dataSnapshot = ds.child("cases");}
+                    dataSnapshot = ds.child("cases");}
 
                 for(DataSnapshot userCase : dataSnapshot.getChildren()){
-                       CaseTakenInfo caseTaken = userCase.getValue(CaseTakenInfo.class);
+                    CaseTakenInfo caseTaken = userCase.getValue(CaseTakenInfo.class);
                     Log.d("curr6", caseTaken.getMasechtaTaken()+" "+caseTaken.isFinished());
                     cases.add(caseTaken);
                 }
@@ -69,8 +83,9 @@ public class MyMishnayos extends AppCompatActivity {
             }
         });
 
-
-
+        /*
+        If user selects an unfinished masechta, open the 'CompletedMasechta' activity to enable user to change status to completed
+         */
         listMishnayos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -87,11 +102,11 @@ public class MyMishnayos extends AppCompatActivity {
         });
     }
 
-
+    /*
+    Create the list of masechtos
+     */
     private class ListAdapter extends ArrayAdapter<CaseTakenInfo>
     {
-
-
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("cases");
 
         public ListAdapter(Context context, int textViewResourceId){
@@ -102,6 +117,9 @@ public class MyMishnayos extends AppCompatActivity {
             super(context, textViewResourceId, casesTaken);
         }
 
+        /*
+        Fills in the fields of each masechta in the list with masechta name, date to complete, etc
+         */
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
 
@@ -111,65 +129,100 @@ public class MyMishnayos extends AppCompatActivity {
                 li = LayoutInflater.from(getContext());
                 v = li.inflate(R.layout.my_masechta, null);
                 holder = new ViewHolder();
-                holder.masechta = (TextView) v.findViewById(R.id.masechtaName);
+                holder.masechta = v.findViewById(R.id.masechtaName);
                 v.setTag(holder);
             }
             else {
                 holder = (ViewHolder)v.getTag();
             }
 
-                final CaseTakenInfo caseTaken = getItem(position);
-                Log.d("aaaaa", "" + caseTaken.getMasechtaTaken());
+            final CaseTakenInfo caseTaken = getItem(position);
+            Log.d("aaaaa", "" + caseTaken.getMasechtaTaken());
 
-                if (caseTaken != null) {
-                    holder.masechta.setText("Masechta: "+caseTaken.getMasechtaTaken());
-                    final TextView completionStatus = (TextView) v.findViewById(R.id.completionStatus);
-                    final TextView nameNiftar = (TextView) v.findViewById(R.id.nameNiftar);
-                    DatabaseReference dref = dbref.child(caseTaken.getCaseId());
-                    dref = dref.child("firstName");
-                    dref.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            nameNiftar.setText("Name: "+((String)dataSnapshot.getValue()));
-                            completionStatus.setText("Status: "+(caseTaken.isFinished()?"Completed":"Not Completed"));
-                            Log.d("curr6", "resetStat "+caseTaken.getMasechtaTaken());
+            if (caseTaken != null) {
+                holder.masechta.setText("Masechta: "+caseTaken.getMasechtaTaken());
+                final TextView completionStatus = (TextView) v.findViewById(R.id.completionStatus);
+                final TextView nameNiftar = (TextView) v.findViewById(R.id.nameNiftar);
+                DatabaseReference dref = dbref.child(caseTaken.getCaseId());
+                dref = dref.child("firstName");
+                dref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        nameNiftar.setText("Name of Niftar: "+((String)dataSnapshot.getValue()));
+                        completionStatus.setText("Status: "+(caseTaken.isFinished()?"Completed":"Not Completed"));
+                        Log.d("curr6", "resetStat "+caseTaken.getMasechtaTaken());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                /*
+                Retreive date niftar from db and fill it in
+                 */
+                final TextView dateNiftar = (TextView) v.findViewById(R.id.dateNiftar);
+                final TextView timeRemaining = (TextView) v.findViewById(R.id.timeRemaining);
+                final ColorStateList textViewDefaultColor = dateNiftar.getTextColors();
+                dref = dbref.child(caseTaken.getCaseId()).child("date");
+                dref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Integer[] dayMonthYear = new Integer[4];
+                        String date = "";
+                        int counter=0;
+                        for (DataSnapshot sp : dataSnapshot.getChildren()) {
+                            counter++;
+                            dayMonthYear[counter] = sp.getValue(Integer.class);
+                            Log.d("aaaa", "" + sp.getValue(Integer.class));
+                            date += sp.getValue(Integer.class)+(counter<3 ? "/":"");
                         }
+                        //Log.d("aaaa", ""+dataSnapshot.getValue(List<>.class));
+                        // dateNiftar.setText(dataSnapshot.child("0").getValue(Integer.class));
+                        dateNiftar.setText("End Date: "+date);
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                    final TextView dateNiftar = (TextView) v.findViewById(R.id.dateNiftar);
-                    dref = dbref.child(caseTaken.getCaseId()).child("date");
-                    dref.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String date = "";
-                            int counter=0;
-                            for (DataSnapshot sp : dataSnapshot.getChildren()) {
-                                counter++;
-                                Log.d("aaaa", "" + sp.getValue(Integer.class));
-                                date += sp.getValue(Integer.class)+(counter<3 ? "/":"");
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            LocalDate localDate = LocalDate.of(dayMonthYear[1], dayMonthYear[2], dayMonthYear[3]);
+                            LocalDate today = LocalDate.now();
+                            Period p = Period.between(localDate, today);
+                            timeRemaining.setText("ft"+p.getDays());
+                        }else{
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                            try {
+                                Date formattedDate = simpleDateFormat.parse(date);
+                                Date currDate = Calendar.getInstance().getTime();
+                                long diff = formattedDate.getTime() - currDate.getTime();
+                                int days = (int)Math.ceil((double)diff/(double)(24*60*60*1000));
+                                if(days>0){
+                                    timeRemaining.setTextColor(textViewDefaultColor);
+                                    timeRemaining.setText("Time Remaining: "+ days + " days");}
+                                else if(days == 0){
+                                    timeRemaining.setTextColor(Color.RED);
+                                    timeRemaining.setText("Time Remaining: ENDS TODAY");}
+                                else if(days < 0){
+                                    timeRemaining.setTextColor(Color.LTGRAY);
+                                    timeRemaining.setText("Time Remaining: Ended "+ Math.abs(days) + " days ago");
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                timeRemaining.setText("Error Calculating Time");
                             }
-                            //Log.d("aaaa", ""+dataSnapshot.getValue(List<>.class));
-                            // dateNiftar.setText(dataSnapshot.child("0").getValue(Integer.class));
-                            dateNiftar.setText("End Date: "+date);
                         }
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
-                }
-                return v;
+                    }
+                });
+
             }
+            return v;
+        }
 
     }
     static class ViewHolder{
         TextView masechta;
     }
-
-
 }

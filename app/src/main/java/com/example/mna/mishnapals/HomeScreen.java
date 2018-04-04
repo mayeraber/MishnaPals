@@ -1,3 +1,8 @@
+//TODO Work more on the sign in options
+/*
+Home screen class with signin, and home-screen options of new case,
+all avail mishnayos, and user's mishnayos
+ */
 package com.example.mna.mishnapals;
 
 import android.content.Intent;
@@ -12,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -93,7 +97,7 @@ public class HomeScreen extends AppCompatActivity {
         newCase.setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View v) {
-                        buttonClicked(v);
+                        newCaseClicked(v);
                     }
                 }
         );
@@ -118,22 +122,26 @@ public class HomeScreen extends AppCompatActivity {
 
         searchCaseButton = (Button) findViewById(R.id.searchCaseButton);
         caseSearch = (EditText) findViewById(R.id.caseIdSearch);
+
         searchCaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getBaseContext(), SearchResult.class);
                 intent.putExtra("caseId", caseSearch.getText().toString());
                 startActivity(intent);
             }
         });
     }
-        public void buttonClicked(View view)
+        public void newCaseClicked(View view)
         {
             Intent intent = new Intent(getBaseContext(), NewCase.class);
             startActivity(intent);
         }
 
+        /*
+        Check db for the public cases, put them into an arraylist and package into Intent to
+        pass to "PublicCases' class
+         */
         public void viewAllClicked(View view)
         {
             DatabaseReference dbref = FirebaseDatabase.getInstance().getReference();

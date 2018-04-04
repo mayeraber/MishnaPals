@@ -1,3 +1,6 @@
+/*
+Class to hold basic info about a masechta
+ */
 package com.example.mna.mishnapals;
 
 import java.io.Serializable;
