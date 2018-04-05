@@ -1,3 +1,8 @@
+/*
+NewCase activity linked to from the home screen when user selects to create a new case.
+User inputs all necessary info, case is created, and then user is shown the details of
+the new case in the 'NewCaseCreated' activity
+ */
 package com.example.mna.mishnapals;
 
 import android.app.AlarmManager;
@@ -34,6 +39,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import java.sql.Time;
@@ -52,7 +59,10 @@ public class NewCase extends AppCompatActivity {
     EditText niftarName;
     EditText fatherName;
     EditText dateNiftar;
+    EditText shloshimDateBox;
+    TextView shloshimDateLabel;
     int day, month, year;
+    String[] dateSplit;
     Calendar dateNiftarCal = new GregorianCalendar();
     DatePickerDialog datePickerDialog;
     AlertDialog.Builder info;
@@ -71,6 +81,8 @@ public class NewCase extends AppCompatActivity {
 
         final Calendar calendar = Calendar.getInstance();
         dateNiftar = (EditText) findViewById(R.id.dateNiftar);
+        shloshimDateBox = (EditText) findViewById(R.id.dateShloshim);
+        shloshimDateLabel = (TextView) findViewById(R.id.dateShloshimLabel);
         niftarName = (EditText) findViewById(R.id.nameOfNiftar);
         fatherName = (EditText) findViewById(R.id.fatherName);
 
@@ -79,16 +91,41 @@ public class NewCase extends AppCompatActivity {
         caseIDLabel = (TextView) findViewById(R.id.caseIDLabel);
         confirmIDLabel = (TextView) findViewById(R.id.confirmCaseIDLabel);
 
+        /*
+        Set up date-picker calendar popup from which to select the date niftar, then add 30 to get the shloshim date
+        Display each in its respective textview
+         */
         dateNiftar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 datePickerDialog = new DatePickerDialog(NewCase.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
-                        dateNiftar.setText(arg2 + "/" + arg3 + "/" + arg1);
                         year = arg1;
                         month = arg2+1;
                         day = arg3 ;
+                        String dateNif = month + "/" + day + "/" + year;
+                        Calendar c1 = Calendar.getInstance();
+                        String shloshimDate = dateNif;
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                        SimpleDateFormat formatWithMonthName = new SimpleDateFormat("MMM dd, yyyy");
+                        try {
+                            c1.setTime(simpleDateFormat.parse(dateNif));
+                            c1.add(Calendar.DAY_OF_MONTH, 30);
+                            shloshimDate = formatWithMonthName.format(c1.getTime());
+                            dateSplit = shloshimDate.split("/");
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            dateNiftar.setText(formatWithMonthName.format(simpleDateFormat.parse(dateNif)));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        shloshimDateLabel.setVisibility(View.VISIBLE);
+                        shloshimDateBox.setVisibility(View.VISIBLE);
+                        shloshimDateBox.setText(shloshimDate);
+
                     }
                 }, calendar.get(YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
@@ -96,6 +133,9 @@ public class NewCase extends AppCompatActivity {
         });
 
 
+        /*
+        If user chooses to make case private, allow user to name the case for reference
+         */
         final CheckBox makePrivate = (CheckBox) findViewById(R.id.makePrivateCheckBox);
         makePrivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -171,10 +211,13 @@ public class NewCase extends AppCompatActivity {
         usersEndpoint = mDatabase.child("users");
     }
 
+    /*
+    When 'Create Case' button is clicked, create the case, push to db, and open activity to show the details of the new case
+     */
     public void createCaseClicked(View view) {
         if (!isEmpty(niftarName) && !isEmpty(fatherName) && !isEmpty(dateNiftar)) {
             Case newCase = new Case(niftarName.getText().toString(), fatherName.getText().toString());
-            newCase.setDate(day, month, year);
+            newCase.setDate(Integer.parseInt(dateSplit[1]), Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[2]));
 
             //store in firebase db
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

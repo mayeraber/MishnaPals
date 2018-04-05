@@ -1,3 +1,6 @@
+/*
+After creating a new case, the user is shown the details, and given a link to bring him to the list of mishnayos to cjoose from in the 'MasechtosList' class
+ */
 package com.example.mna.mishnapals;
 
 import android.content.Intent;
@@ -33,7 +36,7 @@ public class NewCaseCreated extends AppCompatActivity {
             niftarNameEng.setText(caseInfo.firstName+" ben "+caseInfo.fathersName);
 
         List<Integer> date = caseInfo.getDate();
-        dateNiftar.setText(date.get(1)+"/"+date.get(2)+"/"+date.get(0));
+        dateNiftar.setText(date.get(0)+"/"+date.get(1)+"/"+date.get(2));
         Button takeMishnayos = (Button)findViewById(R.id.takeMishnayosAfterReserve);
         takeMishnayos.setOnClickListener(new View.OnClickListener() {
             @Override

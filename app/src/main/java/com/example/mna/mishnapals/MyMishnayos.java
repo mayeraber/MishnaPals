@@ -183,12 +183,12 @@ public class MyMishnayos extends AppCompatActivity {
                         dateNiftar.setText("End Date: "+date);
 
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                            LocalDate localDate = LocalDate.of(dayMonthYear[1], dayMonthYear[2], dayMonthYear[3]);
+                            LocalDate localDate = LocalDate.of(dayMonthYear[3], dayMonthYear[1], dayMonthYear[2]);
                             LocalDate today = LocalDate.now();
                             Period p = Period.between(localDate, today);
                             timeRemaining.setText("ft"+p.getDays());
                         }else{
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
                             try {
                                 Date formattedDate = simpleDateFormat.parse(date);
                                 Date currDate = Calendar.getInstance().getTime();

@@ -129,9 +129,9 @@ public class Case implements Serializable {
 
     public void setDate(int day, int month, int year)
     {
-        date.add(year);
         date.add(month);
         date.add(day);
+        date.add(year);
     }
     public List<Integer> getDate()
     {

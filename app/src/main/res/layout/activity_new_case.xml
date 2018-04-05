@@ -42,8 +42,7 @@
         android:ems="10"
         android:inputType="text"
         android:visibility="gone"
-        app:backgroundTint="@color/colorPrimary"
-        />
+        app:backgroundTint="@color/colorPrimary" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/caseIDConfirm"
@@ -55,8 +54,7 @@
         android:ems="10"
         android:inputType="text"
         android:visibility="gone"
-        app:backgroundTint="@color/colorPrimary"
-        />
+        app:backgroundTint="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/caseIDLabel"
@@ -73,35 +71,46 @@
         android:id="@+id/confirmCaseIDLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/caseIDConfirm"
-        android:layout_alignStart="@+id/caseIDConfirm"
+        android:layout_alignLeft="@+id/makePrivateCheckBox"
+        android:layout_alignStart="@+id/makePrivateCheckBox"
         android:layout_below="@+id/caseIdEntry"
         android:text="@string/confirmCaseID"
         android:visibility="gone" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/dateNiftar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/makePrivateCheckBox"
-        android:layout_alignStart="@+id/makePrivateCheckBox"
-        android:layout_below="@+id/dateNiftarLabel"
+        android:layout_width="115dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
         android:ems="10"
         android:focusableInTouchMode="false"
         android:inputType="textPersonName|date"
-        app:backgroundTint="@color/colorPrimary"
-        />
+        app:backgroundTint="@color/colorPrimary" />
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/dateShloshim"
+        android:layout_width="115dp"
+        android:layout_height="45dp"
+        android:layout_alignBaseline="@+id/dateNiftar"
+        android:layout_alignBottom="@+id/dateNiftar"
+        android:layout_alignEnd="@+id/fatherNameLabelHebrew"
+        android:layout_alignRight="@+id/fatherNameLabelHebrew"
+        android:ems="10"
+        android:focusableInTouchMode="false"
+        android:inputType="textPersonName|date"
+        android:visibility="invisible"
+        app:backgroundTint="@color/colorPrimary" />
 
     <CheckBox
         android:id="@+id/makePrivateCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/caseIDConfirm"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/caseIDConfirm"
         android:layout_below="@+id/dateNiftar"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="14dp"
         android:maxLines="1"
         android:text="@string/makePrivate" />
 
@@ -109,11 +118,21 @@
         android:id="@+id/dateNiftarLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/dateNiftar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/fatherName"
-        android:layout_marginTop="12dp"
         android:text="@string/dateNiftarLabel" />
+
+    <TextView
+        android:id="@+id/dateShloshimLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/dateNiftarLabel"
+        android:layout_alignBottom="@+id/dateNiftarLabel"
+        android:layout_alignLeft="@+id/dateShloshim"
+        android:layout_alignStart="@+id/dateShloshim"
+        android:text="@string/dateShloshimLabel"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/createCaseButton"
@@ -132,12 +151,10 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/nameOfNiftar"
-        android:layout_marginTop="32dp"
+        android:layout_below="@+id/fatherNameLabel"
         android:ems="10"
         android:inputType="textCapSentences|textPersonName"
-        app:backgroundTint="@color/colorPrimary"
-        />
+        app:backgroundTint="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/fatherNameLabel"

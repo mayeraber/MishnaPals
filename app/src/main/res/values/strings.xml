@@ -103,4 +103,5 @@
     <string name="completedMasechtaBut">completedMasButton</string>
     <string name="SignOutMenu">Sign Out</string>
     <string name="completed" />
+    <string name="dateShloshimLabel">Shloshim Date</string>
 </resources>

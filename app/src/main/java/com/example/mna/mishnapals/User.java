@@ -1,3 +1,8 @@
+/*
+Class that represents a single user, storing his basic information.
+This is used in the 'EmailPassword' class and the 'SignInOptions'
+class to put his info into a 'User' package to push into the db
+*/
 package com.example.mna.mishnapals;
 
 import java.util.HashMap;

@@ -1,3 +1,7 @@
+/*
+User can search for a specific case by name. However, it will only display ne result.
+ */
+//TODO Either enforce that 2 cases cant be called by same name, because a search can only display one, or perhaps allow it but enable the search results to show multiple results
 package com.example.mna.mishnapals;
 
 import android.content.Intent;
@@ -16,6 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -37,8 +43,15 @@ public class SearchResult extends AppCompatActivity{
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                         final DataSnapshot snap = snapshot;
-                        String date = snapshot.child("date").child("1").getValue()+"/"+snapshot.child("date").child("2").getValue()+"/"+snapshot.child("date").child("0").getValue();
-                        searchResultName.setText((String)snapshot.child("firstName").getValue()+" ben "+snapshot.child("fathersName").getValue()+" "+date);
+                        String date = snapshot.child("date").child("0").getValue()+"/"+snapshot.child("date").child("1").getValue()+"/"+snapshot.child("date").child("2").getValue();
+                        SimpleDateFormat formatWithMonthName = new SimpleDateFormat("MMM dd, yyyy");
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+                        try {
+                            searchResultName.setText((String)snapshot.child("firstName").getValue()+" ben "+snapshot.child("fathersName").getValue()+" "+formatWithMonthName.format(simpleDateFormat.parse(date)));//date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                         searchResultName.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

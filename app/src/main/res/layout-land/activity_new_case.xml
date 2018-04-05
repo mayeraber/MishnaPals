@@ -94,6 +94,22 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/dateShloshim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/dateNiftar"
+        android:layout_alignBottom="@+id/dateNiftar"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="14dp"
+        android:layout_marginRight="14dp"
+        android:ems="10"
+        android:focusableInTouchMode="false"
+        android:inputType="textPersonName|date"
+        android:visibility="invisible"
+        app:backgroundTint="@color/colorPrimary" />
+
     <CheckBox
         android:id="@+id/makePrivateCheckBox"
         android:layout_width="wrap_content"
@@ -113,6 +129,16 @@
         android:layout_below="@+id/fatherName"
         android:layout_marginTop="4dp"
         android:text="@string/dateNiftarLabel" />
+
+    <TextView
+        android:id="@+id/dateShloshimLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/dateShloshim"
+        android:layout_alignStart="@+id/dateShloshim"
+        android:layout_below="@+id/fatherName"
+        android:text="@string/dateShloshimLabel"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/createCaseButton"

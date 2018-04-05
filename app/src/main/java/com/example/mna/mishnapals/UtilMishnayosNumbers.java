@@ -1,3 +1,8 @@
+/*
+Utility class containing all masechtos names in Hebrew and English, as well as a hashmap connecting each masechta's English name to a tuple containing
+its Seder number and the number of that Masechta in the Seder.
+This class is used in 'CompletedMasechta' class to provide easy acces to the corect branch in the db treet to set the value of a masechta's 'completed' flag
+ */
 package com.example.mna.mishnapals;
 
 import java.util.HashMap;
