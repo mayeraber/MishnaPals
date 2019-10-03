@@ -12,9 +12,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
+//import androidx.appcompat.widget.LinearLayoutCompatLinearLayoutCompat;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,7 +76,7 @@ public class MasechtosList extends AppCompatActivity {
         reserveButton = (Button)findViewById(R.id.reserveMasechtaButton);
         createMasechtos();  //method to populate the 'allSedarim' ArrayList and 'masechtos' hashmap
 
-        caseId = getIntent().getStringExtra("caseId");
+        //caseId = getIntent().getStringExtra("caseId");
         caseKey = getIntent().getStringExtra("caseKey");
         //Log.d("caseKey", caseKey);
 

@@ -11,7 +11,8 @@ import android.content.Intent;
 import java.util.GregorianCalendar;
 
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import java.util.Calendar;
 
 public class ConfirmMasechta extends AppCompatActivity {
 
@@ -124,18 +126,25 @@ public class ConfirmMasechta extends AppCompatActivity {
         });
     }
 
-    //TODO work more on the alarm
+    //TODO work more on the alarm8
     public void setAlarm()
     {
+        final Calendar endDate = Calendar.getInstance();
         //get date to parse https://stackoverflow.com/questions/12473550/how-to-convert-string-date-to-long-millseconds and then send to notification
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
 
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String endYear = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("0").getValue().toString();
-                String endMonth = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("1").getValue().toString();
-                String endDay = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("2").getValue().toString();
+                String endMonth = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("0").getValue().toString();
+                String endDay = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("1").getValue().toString();
+                String endYear = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("2").getValue().toString();
+
+                //calendar months start at '0', so subtract one from month
+                endDate.set(Integer.parseInt(endYear), (Integer.parseInt(endMonth)-1), (Integer.parseInt(endDay)), 8, 35 ,3);
+                Intent alarmIntent = new Intent(ConfirmMasechta.this, AlarmSetter.class);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, endDate.getTimeInMillis(), PendingIntent.getBroadcast(ConfirmMasechta.this, 1, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT));
             }
 
             @Override
@@ -143,11 +152,9 @@ public class ConfirmMasechta extends AppCompatActivity {
 
             }
         });
-        Long time = new GregorianCalendar().getTimeInMillis()+30000;
-        Intent alarmIntent = new Intent(this, AlarmSetter.class);
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, time, PendingIntent.getBroadcast(this, 1, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        Long time = new GregorianCalendar().getTimeInMillis()+30000;
+
         //Toast.makeText(this, "Alarm scheduled", Toast.LENGTH_LONG).show();
     }
 }

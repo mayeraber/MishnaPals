@@ -4,7 +4,8 @@ After creating a new case, the user is shown the details, and given a link to br
 package com.example.mna.mishnapals;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;

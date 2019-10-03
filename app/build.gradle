@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.example.mna.mishnapals"
-        minSdkVersion 16
-        targetSdkVersion 26
+        minSdkVersion 19
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        //resConfigs "en" , "he"
     }
     buildTypes {
         release {
@@ -21,20 +22,26 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     //added for firebase
 
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    compile 'androidx.core:core:1.0.0'
+    compile 'androidx.constraintlayout:constraintlayout:1.1.3'
+    compile 'androidx.legacy:legacy-support-v4:1.0.0'
+    compile 'com.google.firebase:firebase-core:17.1.0'
+    compile 'com.google.firebase:firebase-database:19.0.0'
+    compile 'com.google.firebase:firebase-auth:19.0.0'
+    compile 'com.google.android.gms:play-services-auth:17.0.0'
+    compile 'androidx.annotation:annotation:1.0.0'
 
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:support-v4:26.1.0'
-    compile 'com.google.firebase:firebase-core:12.0.1'
-    compile 'com.google.firebase:firebase-database:12.0.1'
-    compile 'com.google.firebase:firebase-auth:12.0.1'
-    compile 'com.google.android.gms:play-services-auth:12.0.1'
     testCompile 'junit:junit:4.12'
+
+    //added for firebaseUI auth
+    implementation 'com.firebaseui:firebase-ui-auth:5.0.0'
+
 }
 
 //added for firebase

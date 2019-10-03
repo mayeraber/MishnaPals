@@ -5,22 +5,16 @@ the new case in the 'NewCaseCreated' activity
  */
 package com.example.mna.mishnapals;
 
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.app.AlertDialog;
-import android.provider.CalendarContract;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.ActionMode;
-import android.util.Log;
+//import android.support.v7.view.ActionMode;
+import androidx.appcompat.view.ActionMode;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,7 +27,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -43,10 +36,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import java.sql.Time;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.logging.LogManager;
 
 import static java.util.Calendar.YEAR;
 
@@ -107,13 +97,15 @@ public class NewCase extends AppCompatActivity {
                         String dateNif = month + "/" + day + "/" + year;
                         Calendar c1 = Calendar.getInstance();
                         String shloshimDate = dateNif;
+                        String shloshimDateForSplit = dateNif;
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
                         SimpleDateFormat formatWithMonthName = new SimpleDateFormat("MMM dd, yyyy");
                         try {
                             c1.setTime(simpleDateFormat.parse(dateNif));
                             c1.add(Calendar.DAY_OF_MONTH, 30);
+                            shloshimDateForSplit = simpleDateFormat.format(c1.getTime());
                             shloshimDate = formatWithMonthName.format(c1.getTime());
-                            dateSplit = shloshimDate.split("/");
+                            dateSplit = shloshimDateForSplit.split("/");
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
