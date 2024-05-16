@@ -14,6 +14,8 @@ import android.os.Handler;
 //import android.support.v7.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +32,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import java.util.Calendar;
 
-public class ConfirmMasechta extends AppCompatActivity {
+public class ConfirmMasechta extends Toolbar_parent {
 
     DatabaseReference dbRef;
     String caseTakenKey;
@@ -92,23 +94,47 @@ public class ConfirmMasechta extends AppCompatActivity {
 
                     }
                 });
-                setAlarm();
+                //setAlarm(); Stopped using for now. See function below
 
                 Log.d("hiiiiiiiii", caseKey+""+seder+""+masechtaNum);
                 dbRef.child("cases").child(caseKey).child("masechtos").child(""+seder).child(""+masechtaNum).child("status").setValue(true, new DatabaseReference.CompletionListener(){
-                    public void onComplete(DatabaseError error, DatabaseReference ref){
+                    public void onComplete(DatabaseError error, DatabaseReference ref1){
 
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Log.d("hiiiiiiiii", "reached calendar event");
+                                String endYear = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("0").getValue().toString();
+                                String endMonth = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("1").getValue().toString();
+                                String endDay = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("2").getValue().toString();
 
-                        //add event to users calendar
-                       /* Intent calIntent = new Intent(Intent.ACTION_INSERT);
-                        calIntent.setType("vnd.android.cursor.item/event");
-                        calIntent.putExtra(CalendarContract.Events.TITLE, "MishnaPals");
-                        calIntent.putExtra(CalendarContract.Events.DESCRIPTION, masechta.engName);
-                        calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, Calendar.getInstance().getTimeInMillis());
-                        calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, Calendar.getInstance().getTimeInMillis());
-                        calIntent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
-                        startActivity(calIntent);
-                        */
+                                //add event to users calendar
+                                Calendar beginTime = Calendar.getInstance();
+                                //calendar months start at '0', so subtract one from month
+                                beginTime.set(Integer.parseInt(endYear), (Integer.parseInt(endMonth)-1), (Integer.parseInt(endDay)), 12, 00 ,0);
+                                Calendar endTime = Calendar.getInstance();
+                                endTime.set(Integer.parseInt(endYear), (Integer.parseInt(endMonth)-1), (Integer.parseInt(endDay)), 14, 00 ,0);
+                                Intent intent = new Intent(Intent.ACTION_INSERT)
+                                        .setData(Events.CONTENT_URI)
+                                        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+                                        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                                        .putExtra(Events.TITLE, "MishnaPals Reminder")
+                                        .putExtra(Events.DESCRIPTION, "Finish mishnayos tonight");
+                                        //.putExtra(Intent.EXTRA_EMAIL, "rowan@example.com,trevor@example.com");
+                                findViewById(R.id.timerCircle).setVisibility(View.INVISIBLE);
+                                Toast.makeText(getBaseContext(), "Success!!", Toast.LENGTH_SHORT).show();
+                                ConfirmMasechta.this.finish();
+                                startActivity(intent);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        /*
                         findViewById(R.id.timerCircle).setVisibility(View.INVISIBLE);
 
                         Toast.makeText(getBaseContext(), "Success!!", Toast.LENGTH_SHORT).show();
@@ -118,7 +144,7 @@ public class ConfirmMasechta extends AppCompatActivity {
                                 ConfirmMasechta.this.finish();
                             }
                         },2500);
-
+                        */
                         //thread.start();
                     }
                 });
@@ -127,6 +153,7 @@ public class ConfirmMasechta extends AppCompatActivity {
     }
 
     //TODO work more on the alarm8
+    //UPDATE 2/2024: Dropped the alarm feature for the foreseeable future. See AlarmSetter.java comments
     public void setAlarm()
     {
         final Calendar endDate = Calendar.getInstance();

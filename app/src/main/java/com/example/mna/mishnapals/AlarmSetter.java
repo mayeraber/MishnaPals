@@ -1,3 +1,8 @@
+/*
+ConfirmMasechta sets this to fire when the alarm time comes
+UPDATE 2/2024: Realized that docs say 'Registered alarms...will be cleared if it is turned off and rebooted.'
+    Hence, I scraped this whole alarm idea and stuck with adding event to the users calendar
+*/
 package com.example.mna.mishnapals;
 
 import android.app.Notification;
@@ -24,7 +29,7 @@ public class AlarmSetter extends BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
 
         Intent touchNotification = new Intent(context, MyMishnayos.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, touchNotification, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, touchNotification, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -37,7 +42,8 @@ public class AlarmSetter extends BroadcastReceiver
                     n.setContentTitle("MishnaPals")
                     .setContentText("masechta")
                     .setSmallIcon(R.drawable.images)
-                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.images))
+                    //docs said not to set large icon to the app logo, rather usually leave out
+                    //.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.images))
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true).build();
             notificationManager.notify();

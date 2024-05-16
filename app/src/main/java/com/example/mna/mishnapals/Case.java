@@ -1,10 +1,7 @@
 package com.example.mna.mishnapals;
 
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -16,14 +13,14 @@ public class Case implements Serializable {
     String userNameOpened;
     //Calendar endDate;
     String caseId;
-    List<List<MasechtaStatus>> masechtos;
+    //List<List<MasechtaStatus>> masechtos;
+    ArrayList<ArrayList<MasechtaStatus>> masechtos;
     List<Integer> date;
     boolean privateCase;
 
-    Masechta[] takenMasechtos, availMasechtos;
-
     public Case() {
         date = new ArrayList<>();
+        masechtos = new ArrayList<>();
     }
 
     public Case(String fn, String fathersN) {
@@ -31,6 +28,7 @@ public class Case implements Serializable {
 
         fathersName = fathersN;
         date = new ArrayList<>();
+        masechtos = new ArrayList<>();
     }
 
     public String getCaseId() {
@@ -74,8 +72,8 @@ public class Case implements Serializable {
     }
 
     public void createMasechtos() {
-        masechtos = new ArrayList<>();
-        ArrayList<MasechtaStatus> mase = new ArrayList<>();;
+        //this.masechtos = new ArrayList<>();
+        ArrayList<MasechtaStatus> mase = new ArrayList<>();
 
         String[] zeraimEng = new String[]{"Berachos", "Peah", "Demai", "Kelaim", "Shviis", "Terumos", "Maaseros", "Maaser Sheini", "Chalah", "Orlah", "Bikurim"};
         for (String mas : zeraimEng) {
@@ -129,12 +127,14 @@ public class Case implements Serializable {
 
     public void setDate(int day, int month, int year)
     {
+        date.add(year);
         date.add(month);
         date.add(day);
-        date.add(year);
     }
     public List<Integer> getDate()
     {
         return date;
     }
+
+    public ArrayList<ArrayList<MasechtaStatus>> getMasechtos() {return masechtos; }
 }

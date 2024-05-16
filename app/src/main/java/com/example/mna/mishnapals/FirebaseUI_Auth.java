@@ -2,11 +2,15 @@ package com.example.mna.mishnapals;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 //import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -32,6 +36,16 @@ public class FirebaseUI_Auth extends AppCompatActivity {
     private DatabaseReference mDatabase, usersEndpoint;
 
 
+    private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
+            new FirebaseAuthUIActivityResultContract(),
+            new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
+                @Override
+                public void onActivityResult(FirebaseAuthUIAuthenticationResult result) {
+                    onSignInResult(result);
+                }
+            }
+    );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,13 +63,12 @@ public class FirebaseUI_Auth extends AppCompatActivity {
                 fAuth = FirebaseAuth.getInstance();
 
                 // Create and launch sign-in intent
-                startActivityForResult(
-                        AuthUI.getInstance()
-                                .createSignInIntentBuilder()
-                                .setAvailableProviders(providers)
-                                .setLogo(R.drawable.bubble_circle)
-                                .build(),
-                        RC_SIGN_IN);
+                Intent signInIntent = AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .setLogo(R.drawable.bubble_circle)
+                        .build();
+                signInLauncher.launch(signInIntent);
                 // [END auth_fui_create_intent]
             }
         });
@@ -67,80 +80,55 @@ public class FirebaseUI_Auth extends AppCompatActivity {
         });
     }
 
-
-
-    public void createSignInIntent() {
-        // [START auth_fui_create_intent]
-        // Choose authentication providers
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build());
-
-        // Create and launch sign-in intent
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .build(),
-                RC_SIGN_IN);
-        // [END auth_fui_create_intent]
-    }
-
     // [START auth_fui_result]
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
+        IdpResponse response = result.getIdpResponse();
+        if (result.getResultCode() == RESULT_OK) {
 
-        if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
+            FirebaseUser user = fAuth.getCurrentUser();
+            FirebaseUserMetadata metadata = user.getMetadata();
+            Log.d("stamp", ""+metadata.getLastSignInTimestamp());
+            if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
+                // The user is new, show them a fancy intro screen!
+                Log.d("n", "new user");
+            } else {
+                // This is an existing user, show them a welcome back screen.
+                Log.d("o", "old user");
+            }
 
-            if (resultCode == RESULT_OK) {
-                // Successfully signed in
 
-                FirebaseUser user = fAuth.getCurrentUser();
-                FirebaseUserMetadata metadata = user.getMetadata();
-                Log.d("stamp", ""+metadata.getLastSignInTimestamp());
-                if (metadata.getCreationTimestamp() == metadata.getLastSignInTimestamp()) {
-                    // The user is new, show them a fancy intro screen!
-                    Log.d("n", "new user");
-                } else {
-                    // This is an existing user, show them a welcome back screen.
-                    Log.d("o", "old user");
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
+            Query userExists = ref.orderByChild("userEmail").equalTo(user.getEmail());
+            userExists.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(!dataSnapshot.exists()){
+                        FirebaseUser user = fAuth.getCurrentUser();
+                        User newUser = new User();
+                        newUser.setUserEmail(user.getEmail());
+                        newUser.setUserId(user.getUid());
+                        newUser.setCases(null);
+                        mDatabase = FirebaseDatabase.getInstance().getReference();
+                        usersEndpoint = mDatabase.child("users");
+                        String key = usersEndpoint.push().getKey();
+                        usersEndpoint.child(key).setValue(newUser);
+                    }
                 }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
-                Query userExists = ref.orderByChild("userEmail").equalTo(user.getEmail());
-                userExists.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(!dataSnapshot.exists()){
-                            FirebaseUser user = fAuth.getCurrentUser();
-                            User newUser = new User();
-                            newUser.setUserEmail(user.getEmail());
-                            newUser.setUserId(user.getUid());
-                            newUser.setCases(null);
-                            mDatabase = FirebaseDatabase.getInstance().getReference();
-                            usersEndpoint = mDatabase.child("users");
-                            String key = usersEndpoint.push().getKey();
-                            usersEndpoint.child(key).setValue(newUser);
-                        }
-                    }
+                }
+            });
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+            startActivity(new Intent(getBaseContext(), HomeScreen.class));
 
-                    }
-                });
-
-                startActivity(new Intent(getBaseContext(), HomeScreen.class));
-
-            } else {
+        } else {
+                Log.d("d", ""+response.getError().getErrorCode());
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
                 // ...
-            }
         }
     }
     // [END auth_fui_result]
@@ -174,6 +162,24 @@ public class FirebaseUI_Auth extends AppCompatActivity {
         // [END auth_fui_theme_logo]
     }
 */
+
+    public void createSignInIntent() {
+        // [START auth_fui_create_intent]
+        // Choose authentication providers
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.GoogleBuilder().build());
+
+        // Create and launch sign-in intent
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .build(),
+                RC_SIGN_IN);
+        // [END auth_fui_create_intent]
+    }
+
     public void privacyAndTerms() {
         List<AuthUI.IdpConfig> providers = Collections.emptyList();
         // [START auth_fui_pp_tos]

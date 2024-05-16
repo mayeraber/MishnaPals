@@ -21,12 +21,12 @@ import java.util.List;
  * Created by MNA on 8/15/2017.
  */
 
-public class PublicCases extends AppCompatActivity {
+public class PublicCases extends Toolbar_parent {
 
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.avail_public_cases);
+        setContentView(R.layout.avail_public_cases2);
         ListView listView = (ListView) findViewById(R.id.publicCasesList);
         ArrayList<String> caseNames = new ArrayList<>();
         caseNames = getIntent().getStringArrayListExtra("caseNames");

@@ -1,5 +1,5 @@
 /*
-After creating a new case, the user is shown the details, and given a link to bring him to the list of mishnayos to cjoose from in the 'MasechtosList' class
+After creating a new case, the user is shown the details, and given a link to bring him to the list of mishnayos to choose from in the 'MasechtosList' class
  */
 package com.example.mna.mishnapals;
 
@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewCaseCreated extends AppCompatActivity {
+public class NewCaseCreated extends Toolbar_parent {
 
     TextView niftarNameEng;
     TextView dateNiftar;
@@ -37,7 +37,7 @@ public class NewCaseCreated extends AppCompatActivity {
             niftarNameEng.setText(caseInfo.firstName+" ben "+caseInfo.fathersName);
 
         List<Integer> date = caseInfo.getDate();
-        dateNiftar.setText(date.get(0)+"/"+date.get(1)+"/"+date.get(2));
+        dateNiftar.setText(date.get(1)+"/"+date.get(2)+"/"+date.get(0));
         Button takeMishnayos = (Button)findViewById(R.id.takeMishnayosAfterReserve);
         takeMishnayos.setOnClickListener(new View.OnClickListener() {
             @Override

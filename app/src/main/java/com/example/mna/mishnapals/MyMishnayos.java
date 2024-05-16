@@ -1,6 +1,7 @@
 /*
 Displays list of user's taken masechtos and allows user to choose one and open 'CompletedMasechta' activity
 to then be able to change status to completed
+TODO Maybe add functionality to remove list item with swipe to side
  */
 package com.example.mna.mishnapals;
 
@@ -42,7 +43,7 @@ import java.util.List;
  * Created by MNA on 8/13/2017.
  */
 
-public class MyMishnayos extends AppCompatActivity {
+public class MyMishnayos extends Toolbar_parent {  //extends AppCompatActivity {
 
     public void onCreate(Bundle savedInstance)
     {
@@ -92,11 +93,11 @@ public class MyMishnayos extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(!cases.get(position).isFinished()) {
                     Intent intent = new Intent(getBaseContext(), CompletedMasechta.class);
-                    CaseTakenInfo caseTakenInfo = cases.get(position);
+                    //CaseTakenInfo caseTakenInfo = cases.get(position);
                     intent.putExtra("caseId", cases.get(position).getCaseId());
                     intent.putExtra("masechta", cases.get(position).getMasechtaTaken());
                     startActivity(intent);
-                    //TODO maybe change to manually update the listitem instead of ending activity and then resarting
+                    //TODO maybe change to manually update the listitem instead of ending activity and then restarting
                     MyMishnayos.this.finish();
                 }
             }
@@ -170,12 +171,12 @@ public class MyMishnayos extends AppCompatActivity {
                 dref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Integer[] dayMonthYear = new Integer[4];
+                        Integer[] YearMonthDay = new Integer[4];
                         String date = "";
                         int counter=0;
                         for (DataSnapshot sp : dataSnapshot.getChildren()) {
                             counter++;
-                            dayMonthYear[counter] = sp.getValue(Integer.class);
+                            YearMonthDay[counter] = sp.getValue(Integer.class);
                             Log.d("aaaa", "" + sp.getValue(Integer.class));
                             date += sp.getValue(Integer.class)+(counter<3 ? "/":"");
                         }
@@ -184,10 +185,16 @@ public class MyMishnayos extends AppCompatActivity {
                         dateNiftar.setText("End Date: "+date);
 
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                            LocalDate localDate = LocalDate.of(dayMonthYear[3], dayMonthYear[1], dayMonthYear[2]);
+                            LocalDate localDate = LocalDate.of(YearMonthDay[1], YearMonthDay[2], YearMonthDay[3]);
                             LocalDate today = LocalDate.now();
+                            int date_passed = localDate.compareTo((today));
                             Period p = Period.between(localDate, today);
-                            timeRemaining.setText("ft"+p.getDays());
+                            if (date_passed < 0) {
+                                timeRemaining.setText("Time Remaining: Ended " + p.getYears() + " years, "+p.getMonths()+" months, "+p.getDays()+" days ago");
+                            }
+                            else {
+                                timeRemaining.setText("Time Remaining: " + p.getMonths()+" months, "+p.getDays() + " days");
+                            }
                         }else{
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
                             try {

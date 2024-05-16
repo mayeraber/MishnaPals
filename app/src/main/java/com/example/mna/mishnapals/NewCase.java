@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 //import android.support.v7.view.ActionMode;
 import androidx.appcompat.view.ActionMode;
+
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -216,6 +218,7 @@ public class NewCase extends AppCompatActivity {
             String key = usersEndpoint.push().getKey();
             newCase.setUserNameOpened(user.getEmail());
             newCase.createMasechtos();
+            Log.d("testing new case mas", " "+newCase.masechtos);
 
             if (((CheckBox) findViewById(R.id.makePrivateCheckBox)).isChecked() && caseIdEntry.getText().toString() != null) {
                 newCase.setCaseId(caseIdEntry.getText().toString());

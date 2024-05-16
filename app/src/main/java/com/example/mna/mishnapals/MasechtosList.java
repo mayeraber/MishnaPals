@@ -2,7 +2,7 @@
 List of masechtos to show all masechtos of the case with their status' and button for reservation which starts 'ConfirmMasechta' activity
 Designs the expandable drop-down list, including bubble count of number of avail masechtos for each seder in the group-header, and masechta
 info on each child with status and option to register if masechta is available
-This activity is called from 'NewCaseCreated' and from 'SeasrchResult'
+This activity is called from 'NewCaseCreated' and from 'SearchResult'
  */
 package com.example.mna.mishnapals;
 
@@ -48,7 +48,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MasechtosList extends AppCompatActivity {
+public class MasechtosList extends Toolbar_parent {
 
     Masechta[] sederZeraim = new Masechta[11];
     Masechta[] sederMoed = new Masechta[12];
@@ -71,7 +71,7 @@ public class MasechtosList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_masechtos_list);
+        setContentView(R.layout.activity_masechtos_list2);
         takenLabel = (TextView)findViewById(R.id.takenLabel);
         reserveButton = (Button)findViewById(R.id.reserveMasechtaButton);
         createMasechtos();  //method to populate the 'allSedarim' ArrayList and 'masechtos' hashmap

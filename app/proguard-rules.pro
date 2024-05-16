@@ -23,3 +23,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#for the following 4 lines see app level build.gradle
+#-if class androidx.credentials.CredentialManager
+#-keep class androidx.credentials.playservices.** {
+#  *;
+#}

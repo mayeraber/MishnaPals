@@ -1,3 +1,6 @@
+/*
+Switched to using EmailPasswordSignin
+ */
 package com.example.mna.mishnapals;
 
 /**
@@ -36,7 +39,7 @@ public class EmailPassword extends Activity implements
     // [START declare_auth]
     private FirebaseAuth mAuth;
     // [END declare_auth]
-    private DatabaseReference mDatabase, casesEndpoint, usersEndpoint;
+    private DatabaseReference mDatabase, usersEndpoint;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

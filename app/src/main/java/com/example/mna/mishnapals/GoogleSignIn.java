@@ -23,6 +23,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 /**
  * Created by MNA on 8/23/2017.
+   5/24: not using for now, switched to GoogleSignInOptions
  */
 
 public class GoogleSignIn extends AppCompatActivity{

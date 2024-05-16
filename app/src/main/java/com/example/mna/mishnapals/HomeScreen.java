@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -44,41 +46,14 @@ public class HomeScreen extends AppCompatActivity {
     EditText caseSearch;
     private FirebaseAuth fAuth;
 
-    //FirebaseDatabase fbdb;
-    //DatabaseReference ref;
     FirebaseUser user;
-
+    //specify the options menu, for signing out
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        fAuth = FirebaseAuth.getInstance();
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        googleApiClient= new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-                    }
-                })
-                .addApiIfAvailable(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
         MenuInflater inflator = getMenuInflater();
         inflator.inflate(R.menu.mishna_pals_menu, menu);
         return true;
     }
-
-    /* Used before started using firebaseUI
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        fAuth.signOut();
-        Auth.GoogleSignInApi.signOut(googleApiClient);
-        startActivity(new Intent(getBaseContext(), SignInOptions.class));
-        HomeScreen.this.finish();
-        return true;
-    }
-    */
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -96,17 +71,29 @@ public class HomeScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-    if(user==null)
-    {
-           // startActivity(new Intent(getBaseContext(), EmailPassword.class));
-
-        startActivity(new Intent(getBaseContext(), FirebaseUI_Auth.class));
+        if(user==null)
+        {
+            // startActivity(new Intent(getBaseContext(), EmailPassword.class));
+            startActivity(new Intent(getBaseContext(), FirebaseUI_Auth.class));
             HomeScreen.this.finish();
-    }
-
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
+
+        //next 2 lines added for androidx toolbar
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        myToolbar.setNavigationIcon(R.drawable.ic_menu_home);
+        myToolbar.setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getBaseContext(), HomeScreen.class);
+                        startActivity(intent);
+                    }
+                }
+        );
+
+
         //setContentView(R.layout.home_screen_horizontal);
         View layout = findViewById(R.id.backgroundLayoutHome);
         Drawable background = layout.getBackground();
@@ -150,55 +137,93 @@ public class HomeScreen extends AppCompatActivity {
             }
         });
     }
-        public void newCaseClicked(View view)
-        {
-            Intent intent = new Intent(getBaseContext(), NewCase.class);
-            startActivity(intent);
-        }
-
-        /*
-        Check db for the public cases, put them into an arraylist and package into Intent to
-        pass to "PublicCases' class
-         */
-        public void viewAllClicked(View view)
-        {
-            DatabaseReference dbref = FirebaseDatabase.getInstance().getReference();
-            Query publicCase = dbref.child("cases").orderByChild("privateCase").equalTo(false);
-            publicCase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    final ArrayList<Case> publicCases = new ArrayList<Case>();
-                    final ArrayList<String> publicCaseNames = new ArrayList<String>();
-                    final ArrayList<String> publicCaseKeys = new ArrayList<String>();
-
-                    for(DataSnapshot ds : dataSnapshot.getChildren())
-                    {
-                        publicCaseKeys.add(ds.getKey());
-                        publicCases.add(ds.getValue(Case.class));
-                        publicCaseNames.add(ds.getValue(Case.class).getFirstName());
-                        Log.d("aaaaa", ""+ds.getValue(Case.class).firstName);
-                    }
-                    Bundle extras = new Bundle();
-                    extras.putSerializable("Arraylist", publicCases);
-                    Intent intent = new Intent(getBaseContext(), PublicCases.class);
-                    intent.putExtra("caseNames", publicCaseNames).putExtra("cases", extras).putExtra("caseIds", publicCaseKeys);
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-            /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            Log.d("CURRENTUSERHome", user.getUid());
-            Intent intent = new Intent(getBaseContext(), MasechtosList.class);
-            startActivity(intent);*/
-        }
-
-        public void myMishnayosClicked(View view)
-        {
-            startActivity(new Intent(getBaseContext(), MyMishnayos.class));
-        }
+    public void newCaseClicked(View view)
+    {
+        Intent intent = new Intent(getBaseContext(), NewCase.class);
+        startActivity(intent);
     }
+
+    /*
+    Check db for the public cases, put them into an arraylist and package into Intent to
+    pass to "PublicCases' class
+     */
+    public void viewAllClicked(View view)
+    {
+        DatabaseReference dbref = FirebaseDatabase.getInstance().getReference();
+        Query publicCase = dbref.child("cases").orderByChild("privateCase").equalTo(false);
+        publicCase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final ArrayList<Case> publicCases = new ArrayList<Case>();
+                final ArrayList<String> publicCaseNames = new ArrayList<String>();
+                final ArrayList<String> publicCaseKeys = new ArrayList<String>();
+
+                for(DataSnapshot ds : dataSnapshot.getChildren())
+                {
+                    publicCaseKeys.add(ds.getKey());
+                    publicCases.add(ds.getValue(Case.class));
+                    publicCaseNames.add(ds.getValue(Case.class).getFirstName());
+                    Log.d("aaaaa", ""+ds.getValue(Case.class).firstName);
+                }
+                Bundle extras = new Bundle();
+                extras.putSerializable("Arraylist", publicCases);
+                Intent intent = new Intent(getBaseContext(), PublicCases.class);
+                intent.putExtra("caseNames", publicCaseNames).putExtra("cases", extras).putExtra("caseIds", publicCaseKeys);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.d("CURRENTUSERHome", user.getUid());
+        Intent intent = new Intent(getBaseContext(), MasechtosList.class);
+        startActivity(intent);*/
+    }
+
+    public void myMishnayosClicked(View view)
+    {
+        startActivity(new Intent(getBaseContext(), MyMishnayos.class));
+    }
+
+
+    /*
+    //specify the options menu, for signing out
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        fAuth = FirebaseAuth.getInstance();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        googleApiClient= new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                    }
+                })
+                .addApiIfAvailable(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        MenuInflater inflator = getMenuInflater();
+        inflator.inflate(R.menu.mishna_pals_menu, menu);
+        return true;
+    }
+    */
+
+    /* Used before started using firebaseUI
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        fAuth.signOut();
+        Auth.GoogleSignInApi.signOut(googleApiClient);
+        startActivity(new Intent(getBaseContext(), SignInOptions.class));
+        HomeScreen.this.finish();
+        return true;
+    }
+    */
+
+
+}

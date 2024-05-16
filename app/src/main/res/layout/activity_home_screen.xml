@@ -1,46 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/backgroundLayoutHome"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
     android:background="@drawable/images">
+
+    <include layout="@layout/toolbar" />
 
     <EditText
         android:id="@+id/caseIdSearch"
-        android:layout_width="match_parent"
+        android:layout_width="369dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:drawableLeft="@drawable/ic_search_black_36dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="25dp"
+        android:background="@drawable/edittext_format"
         android:drawableStart="@drawable/ic_search_black_36dp"
-        android:textSize="25sp"
+        android:drawableLeft="@drawable/ic_search_black_36dp"
         android:hint="@string/caseId"
         android:inputType="textPersonName"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@drawable/edittext_format"/>
+        android:textSize="25sp" />
 
     <Button
         android:id="@+id/newCase"
-        android:layout_width="match_parent"
+        android:layout_width="359dp"
         android:layout_height="wrap_content"
-        android:text="@string/new_case"
-        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginEnd="25dp"
+        android:text="@string/new_case" />
 
     <Button
         android:id="@+id/myMishnayosButton"
-        android:layout_width="match_parent"
+        android:layout_width="351dp"
         android:layout_height="wrap_content"
-        android:text="@string/currentMishnayosButton"
         android:layout_above="@+id/viewAllAvailButton"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="22dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="22dp"
+        android:text="@string/currentMishnayosButton" />
 
     <Button
         android:id="@+id/searchCaseButton"
@@ -52,13 +65,18 @@
 
     <Button
         android:id="@+id/viewAllAvailButton"
-        android:layout_width="wrap_content"
+        android:layout_width="343dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="57dp"
-        android:text="@string/viewAllAvail"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="57dp"
+        android:text="@string/viewAllAvail" />
+
 </RelativeLayout>

@@ -1,3 +1,6 @@
+/*
+switched to firebaseui
+ */
 package com.example.mna.mishnapals;
 
 import android.content.Intent;

@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
  * Created by MNA on 8/16/2017.
  */
 
-public class CompletedMasechta extends AppCompatActivity {
+public class CompletedMasechta extends Toolbar_parent {
     public void onCreate(Bundle savedInstance){
         UtilMishnayosNumbers u = new UtilMishnayosNumbers();
         super.onCreate(savedInstance);

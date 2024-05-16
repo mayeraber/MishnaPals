@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Switched to this version when I added the toolbar-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MasechtosList">
 
     <include layout="@layout/toolbar" />
 
-    <ListView
-        android:id="@+id/listMishnayos"
+    <ExpandableListView
+        android:id="@+id/masechtosListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="?attr/actionBarSize"
-        android:divider="#FFCC00"
-        android:dividerHeight="4px"/>
+        android:divider="@android:color/holo_blue_light"
+        android:dividerHeight="0.5dp"
+        />
 </RelativeLayout>
