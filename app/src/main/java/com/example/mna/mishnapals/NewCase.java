@@ -31,8 +31,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,6 +52,8 @@ public class NewCase extends AppCompatActivity {
     EditText caseIdConfirm;
     TextView caseIDLabel;
     TextView confirmIDLabel;
+    TextView idTaken;
+    TextView idMatch;
     EditText niftarName;
     EditText fatherName;
     EditText dateNiftar;
@@ -61,6 +67,7 @@ public class NewCase extends AppCompatActivity {
     private DatabaseReference mDatabase, casesEndpoint, usersEndpoint;
     FirebaseAuth fireauth;
     String caseId;
+    boolean isPrivate = false;
 
 
     @Override
@@ -82,6 +89,8 @@ public class NewCase extends AppCompatActivity {
         caseIdConfirm = (EditText) findViewById(R.id.caseIDConfirm);
         caseIDLabel = (TextView) findViewById(R.id.caseIDLabel);
         confirmIDLabel = (TextView) findViewById(R.id.confirmCaseIDLabel);
+        idTaken = (TextView) findViewById(R.id.idTaken);
+        idMatch = (TextView) findViewById(R.id.idMatch);
 
         /*
         Set up date-picker calendar popup from which to select the date niftar, then add 30 to get the shloshim date
@@ -135,6 +144,7 @@ public class NewCase extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (makePrivate.isChecked()) {
+                    isPrivate = true;
                     caseIdEntry.setVisibility(View.VISIBLE);//setEnabled(true);
                     caseIdConfirm.setVisibility(View.VISIBLE);//setEnabled(true);
                     caseIDLabel.setVisibility(View.VISIBLE);
@@ -151,6 +161,7 @@ public class NewCase extends AppCompatActivity {
                     }
 
                 } else {
+                    isPrivate = false;
                     caseIdEntry.setVisibility(View.GONE);
                     caseIdConfirm.setVisibility(View.GONE);
                     caseIDLabel.setVisibility(View.GONE);
@@ -191,6 +202,72 @@ public class NewCase extends AppCompatActivity {
 
             }
         });
+        /*
+        caseIdConfirm.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                Query caseId = ref.child("cases").orderByChild("caseId").equalTo(caseIdEntry.getText().toString());
+
+                caseId.addListenerForSingleValueEvent(new ValueEventListener() {                        @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()){
+                        //Drawable img = NewCase.this.getBaseContext().getResources().getDrawable(R.drawable.indicator_input_error);
+                        //img.setBounds(0, 0, img.getIntrinsicWidth() * idTaken.getMeasuredHeight() / img.getIntrinsicHeight(), idTaken.getMeasuredHeight());
+                        idTaken.setCompoundDrawablesWithIntrinsicBounds(R.drawable.indicator_input_error, 0,0,0);
+                        //idTaken.setText("ID taken already");
+                        idTaken.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        idTaken.setVisibility(View.GONE);
+                    }
+
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+        });}});
+        */
+        caseIdConfirm.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                    Query caseId = ref.child("cases").orderByChild("caseId").equalTo(caseIdEntry.getText().toString());
+
+                    caseId.addListenerForSingleValueEvent(new ValueEventListener() {                        @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()){
+                            //Drawable img = NewCase.this.getBaseContext().getResources().getDrawable(R.drawable.indicator_input_error);
+                            //img.setBounds(0, 0, img.getIntrinsicWidth() * idTaken.getMeasuredHeight() / img.getIntrinsicHeight(), idTaken.getMeasuredHeight());
+                            idTaken.setCompoundDrawablesWithIntrinsicBounds(R.drawable.indicator_input_error, 0,0,0);
+                            //idTaken.setText("ID taken already");
+                            idTaken.setText("ID taken already");
+                            idTaken.setVisibility(View.VISIBLE);
+                            caseIdEntry.requestFocus();
+                        }
+                        else{
+                            if (caseIdEntry.getText().toString().length() < 5) {
+                                idTaken.setVisibility(View.VISIBLE);
+                                idTaken.setText("ID must be atleast 5 characters");
+                                caseIdEntry.requestFocus();
+                            }
+                            else {
+                                idTaken.setVisibility(View.GONE);
+                            }
+                        }
+
+                    }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+                }
+                else {
+
+                }
+            }
+        });
 
         Button createCaseButton = (Button) findViewById(R.id.createCaseButton);
         createCaseButton.setOnClickListener(new View.OnClickListener() {
@@ -209,7 +286,21 @@ public class NewCase extends AppCompatActivity {
     When 'Create Case' button is clicked, create the case, push to db, and open activity to show the details of the new case
      */
     public void createCaseClicked(View view) {
-        if (!isEmpty(niftarName) && !isEmpty(fatherName) && !isEmpty(dateNiftar)) {
+        boolean idNotMatch = false;
+        if (isPrivate) {
+            if (!caseIdEntry.getText().toString().equals(caseIdConfirm.getText().toString())) {
+                idMatch.setCompoundDrawablesWithIntrinsicBounds(R.drawable.indicator_input_error, 0,0,0);
+                idMatch.setVisibility(View.VISIBLE);
+                caseIdConfirm.requestFocus();
+                idNotMatch = true;
+            } else {
+                idMatch.setVisibility(View.GONE);
+                idNotMatch = false;
+            }
+        }
+
+        if (!isEmpty(niftarName) && !isEmpty(fatherName) && !isEmpty(dateNiftar) && !idNotMatch) {
+
             Case newCase = new Case(niftarName.getText().toString(), fatherName.getText().toString());
             newCase.setDate(Integer.parseInt(dateSplit[1]), Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[2]));
 
@@ -221,7 +312,7 @@ public class NewCase extends AppCompatActivity {
             Log.d("testing new case mas", " "+newCase.masechtos);
 
             if (((CheckBox) findViewById(R.id.makePrivateCheckBox)).isChecked() && caseIdEntry.getText().toString() != null) {
-                newCase.setCaseId(caseIdEntry.getText().toString());
+                newCase.setCaseIdPrivate(caseIdEntry.getText().toString());
                 newCase.setPrivateCase(true);
             } else {
                 newCase.setCaseId(key);

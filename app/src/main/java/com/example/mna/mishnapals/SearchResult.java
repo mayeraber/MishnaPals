@@ -42,29 +42,36 @@ public class SearchResult extends AppCompatActivity{
 
                 caseId.addListenerForSingleValueEvent(new ValueEventListener() {                        @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                        final DataSnapshot snap = snapshot;
-                        String date = snapshot.child("date").child("0").getValue()+"/"+snapshot.child("date").child("1").getValue()+"/"+snapshot.child("date").child("2").getValue();
-                        SimpleDateFormat formatWithMonthName = new SimpleDateFormat("MMM dd, yyyy");
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                    if (!dataSnapshot.exists()){
+                        searchResultName.setText("No match found");
+                    }
+                    else {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            final DataSnapshot snap = snapshot;
+                            String date = snapshot.child("date").child("0").getValue() + "/" + snapshot.child("date").child("1").getValue() + "/" + snapshot.child("date").child("2").getValue();
+                            SimpleDateFormat formatWithMonthName = new SimpleDateFormat("MMM dd, yyyy");
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");;//new SimpleDateFormat("MM/dd/yyyy");
 
-                        try {
-                            searchResultName.setText((String)snapshot.child("firstName").getValue()+" ben "+snapshot.child("fathersName").getValue()+" "+formatWithMonthName.format(simpleDateFormat.parse(date)));//date);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        searchResultName.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                SearchResult.this.finish();
-                                Intent intent = new Intent(getBaseContext(), MasechtosList.class);
-                                intent.putExtra("caseKey", snap.getRef().getKey());
-                                startActivity(intent);
+                            try {
+                                searchResultName.setText((String) snapshot.child("firstName").getValue() + " ben " + snapshot.child("fathersName").getValue() + "\n"  + formatWithMonthName.format(simpleDateFormat.parse(date)));//date);
+                                //Note: In ablove line the newline character wasnt working until I removed the 'inputType:textPersonName' from the XML
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
-                        });
+                            searchResultName.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    SearchResult.this.finish();
+                                    Intent intent = new Intent(getBaseContext(), MasechtosList.class);
+                                    intent.putExtra("caseKey", snap.getRef().getKey());
+                                    startActivity(intent);
+                                }
+                            });
 
 
-                    }}
+                        }
+                    }
+                }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {

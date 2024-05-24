@@ -7,9 +7,10 @@
         android:id="@+id/searchResultName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:gravity="center"
+        android:minLines="2"
+        android:singleLine="false"
         android:textSize="30sp"
         android:textStyle="bold" />
 
@@ -17,8 +18,8 @@
         android:id="@+id/searchResultDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:ems="10"
+        android:gravity="center"
         android:inputType="textPersonName"
         android:text="Name"
         android:visibility="invisible" />

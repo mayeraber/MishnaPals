@@ -180,6 +180,7 @@ public class MyMishnayos extends Toolbar_parent {  //extends AppCompatActivity {
                             Log.d("aaaa", "" + sp.getValue(Integer.class));
                             date += sp.getValue(Integer.class)+(counter<3 ? "/":"");
                         }
+                        Log.d("abababa", ""+YearMonthDay);
                         //Log.d("aaaa", ""+dataSnapshot.getValue(List<>.class));
                         // dateNiftar.setText(dataSnapshot.child("0").getValue(Integer.class));
                         dateNiftar.setText("End Date: "+date);
@@ -190,7 +191,15 @@ public class MyMishnayos extends Toolbar_parent {  //extends AppCompatActivity {
                             int date_passed = localDate.compareTo((today));
                             Period p = Period.between(localDate, today);
                             if (date_passed < 0) {
-                                timeRemaining.setText("Time Remaining: Ended " + p.getYears() + " years, "+p.getMonths()+" months, "+p.getDays()+" days ago");
+                                if (p.getYears() > 1) {
+                                    timeRemaining.setText("Time Remaining: Ended " + p.getYears() + " years, " + p.getMonths() + " months, " + p.getDays() + " days ago");
+                                }
+                                else if (p.getMonths() > 1){
+                                    timeRemaining.setText("Time Remaining: Ended " + p.getMonths() + " months, " + p.getDays() + " days ago");
+                                }
+                                else {
+                                    timeRemaining.setText("Time Remaining: Ended " + p.getDays() + " days ago");
+                                }
                             }
                             else {
                                 timeRemaining.setText("Time Remaining: " + p.getMonths()+" months, "+p.getDays() + " days");

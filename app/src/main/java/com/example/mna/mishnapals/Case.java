@@ -39,6 +39,10 @@ public class Case implements Serializable {
         this.caseId = caseId.substring(caseId.length() - 5, caseId.length());
     }
 
+    public void setCaseIdPrivate(String caseId) {
+        this.caseId = caseId;
+    }
+
     public String getFirstName() {
         return firstName;
     }

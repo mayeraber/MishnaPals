@@ -1,7 +1,6 @@
 /*
 If user chooses from home screen to view all public cases, this is where he is brought to and shown all public cases
  */
-//TODO Right now nothing happens if user taps on case....Must add functionality that it should show list of that cases's mishnayos
 package com.example.mna.mishnapals;
 
 import androidx.appcompat.app.AppCompatActivity;

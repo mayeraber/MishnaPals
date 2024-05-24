@@ -2,32 +2,34 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/backgroundLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/images"
     android:orientation="vertical"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:background="@drawable/images">
+    tools:visibility="visible">
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/nameOfNiftar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/niftarNameLabelHeb"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:ems="10"
         android:inputType="textCapSentences"
-        app:backgroundTint="@color/colorPrimary"
-    />
+        app:backgroundTint="@color/colorPrimary" />
+
     <TextView
         android:id="@+id/nameNiftarLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/nameOfNiftar"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:text="@string/newNiftarName" />
 
 
@@ -35,9 +37,9 @@
         android:id="@+id/caseIdEntry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/caseIDLabel"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:ems="10"
         android:inputType="text"
         android:visibility="gone"
@@ -47,9 +49,9 @@
         android:id="@+id/caseIDConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/confirmCaseIDLabel"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:ems="10"
         android:inputType="text"
         android:visibility="gone"
@@ -59,9 +61,9 @@
         android:id="@+id/caseIDLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/makePrivateCheckBox"
-        android:layout_alignStart="@+id/makePrivateCheckBox"
         android:layout_below="@+id/makePrivateCheckBox"
+        android:layout_alignStart="@+id/makePrivateCheckBox"
+        android:layout_alignLeft="@+id/makePrivateCheckBox"
         android:layout_marginTop="12dp"
         android:text="@string/caseId"
         android:visibility="gone" />
@@ -70,9 +72,9 @@
         android:id="@+id/confirmCaseIDLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/makePrivateCheckBox"
-        android:layout_alignStart="@+id/makePrivateCheckBox"
         android:layout_below="@+id/caseIdEntry"
+        android:layout_alignStart="@+id/makePrivateCheckBox"
+        android:layout_alignLeft="@+id/makePrivateCheckBox"
         android:text="@string/confirmCaseID"
         android:visibility="gone" />
 
@@ -80,8 +82,8 @@
         android:id="@+id/dateNiftar"
         android:layout_width="115dp"
         android:layout_height="45dp"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:ems="10"
         android:focusableInTouchMode="false"
@@ -93,9 +95,9 @@
         android:layout_width="115dp"
         android:layout_height="45dp"
         android:layout_alignBaseline="@+id/dateNiftar"
-        android:layout_alignBottom="@+id/dateNiftar"
         android:layout_alignEnd="@+id/fatherNameLabelHebrew"
         android:layout_alignRight="@+id/fatherNameLabelHebrew"
+        android:layout_alignBottom="@+id/dateNiftar"
         android:ems="10"
         android:focusableInTouchMode="false"
         android:inputType="textPersonName|date"
@@ -106,9 +108,9 @@
         android:id="@+id/makePrivateCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/dateNiftar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_marginTop="14dp"
         android:maxLines="1"
         android:text="@string/makePrivate" />
@@ -118,8 +120,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/dateNiftar"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:text="@string/dateNiftarLabel" />
 
     <TextView
@@ -127,9 +129,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/dateNiftarLabel"
-        android:layout_alignBottom="@+id/dateNiftarLabel"
-        android:layout_alignLeft="@+id/dateShloshim"
         android:layout_alignStart="@+id/dateShloshim"
+        android:layout_alignLeft="@+id/dateShloshim"
+        android:layout_alignBottom="@+id/dateNiftarLabel"
         android:text="@string/dateShloshimLabel"
         android:visibility="invisible" />
 
@@ -146,11 +148,11 @@
         android:id="@+id/fatherName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/fatherNameLabel"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:ems="10"
         android:inputType="textCapSentences|textPersonName"
         app:backgroundTint="@color/colorPrimary" />
@@ -159,9 +161,9 @@
         android:id="@+id/fatherNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/nameOfNiftar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_marginTop="17dp"
         android:text="Name of Father" />
 
@@ -178,9 +180,9 @@
         android:id="@+id/niftarNameLabelHeb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="30dp"
         android:text="@string/hebNameNiftar" />
 
@@ -193,19 +195,48 @@
         android:layout_alignParentRight="true"
         android:clickable="true"
         android:text="@string/moreOptionsInNewCase"
-        android:textColor="@android:color/holo_blue_dark" />
+        android:textColor="@android:color/holo_blue_dark"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/privateInfoButton"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_alignLeft="@+id/createCaseButton"
         android:layout_alignStart="@+id/createCaseButton"
+        android:layout_alignLeft="@+id/createCaseButton"
         android:layout_alignTop="@+id/makePrivateCheckBox"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:background="@drawable/button_border"
         android:gravity="center_vertical|center_horizontal"
         android:text="  \?  " />
+
+
+
+    <TextView
+        android:id="@+id/idTaken"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/caseIdEntry"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/caseIdEntry"
+        android:textSize="20dp"
+        android:drawableLeft="@drawable/indicator_input_error"
+        android:drawablePadding="5dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/idMatch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/caseIDConfirm"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/caseIDConfirm"
+        android:text="IDs must match"
+        android:textSize="20dp"
+        android:drawableLeft="@drawable/indicator_input_error"
+        android:drawablePadding="5dp"
+        android:visibility="gone" />
+
 
 </RelativeLayout>
