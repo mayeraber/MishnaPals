@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * Created by MNA on 8/13/2017.
  */
 
-public class SearchResult extends AppCompatActivity{
+public class SearchResult extends Toolbar_parent{//AppCompatActivity{
     public void onCreate(Bundle savedInstance)
     {
         super.onCreate(savedInstance);
@@ -39,11 +39,11 @@ public class SearchResult extends AppCompatActivity{
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Query caseId = ref.child("cases").orderByChild("caseId").equalTo(getIntent().getStringExtra("caseId"));
-
+        //TODO Add email address to contact admin
                 caseId.addListenerForSingleValueEvent(new ValueEventListener() {                        @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (!dataSnapshot.exists()){
-                        searchResultName.setText("No match found");
+                        searchResultName.setText("No match found. \n If you forgot the user ID, email the name of the deceased and the end date of the mishnayos to us and we will try to assist you.");
                     }
                     else {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {

@@ -161,7 +161,9 @@ public class HomeScreen extends AppCompatActivity {
                 for(DataSnapshot ds : dataSnapshot.getChildren())
                 {
                     publicCaseKeys.add(ds.getKey());
-                    publicCases.add(ds.getValue(Case.class));
+                    Case nextCase = ds.getValue(Case.class);
+                    nextCase.setFirebaseID(ds.getKey());
+                    publicCases.add(nextCase);
                     publicCaseNames.add(ds.getValue(Case.class).getFirstName());
                     Log.d("aaaaa", ""+ds.getValue(Case.class).firstName);
                 }

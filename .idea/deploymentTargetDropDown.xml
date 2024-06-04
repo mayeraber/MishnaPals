@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="PublicCases">
+        <State />
+      </entry>
       <entry key="mishnapals">
         <State />
       </entry>

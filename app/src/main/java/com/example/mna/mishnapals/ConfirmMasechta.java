@@ -36,7 +36,7 @@ public class ConfirmMasechta extends Toolbar_parent {
 
     DatabaseReference dbRef;
     String caseTakenKey;
-
+    Masechta masechta;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +48,7 @@ public class ConfirmMasechta extends Toolbar_parent {
         final String seder = getIntent().getStringExtra("seder");
         final String masechtaNum = getIntent().getStringExtra("masechtaNum");
 
-        final Masechta masechta = (Masechta) getIntent().getSerializableExtra("Masechta");
+        masechta = (Masechta) getIntent().getSerializableExtra("Masechta");
         TextView confirmMasechta = (TextView)findViewById(R.id.masechtaConfirmDetails);
         confirmMasechta.setText("מסכת "+masechta.hebName);
         TextView confirmPerakim = (TextView)findViewById(R.id.numPerakimConfirm);
@@ -120,7 +120,7 @@ public class ConfirmMasechta extends Toolbar_parent {
                                         .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
                                         .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
                                         .putExtra(Events.TITLE, "MishnaPals Reminder")
-                                        .putExtra(Events.DESCRIPTION, "Finish mishnayos tonight");
+                                        .putExtra(Events.DESCRIPTION, "Finish mishnayos " + masechta.hebName +" tonight");
                                         //.putExtra(Intent.EXTRA_EMAIL, "rowan@example.com,trevor@example.com");
                                 findViewById(R.id.timerCircle).setVisibility(View.INVISIBLE);
                                 Toast.makeText(getBaseContext(), "Success!!", Toast.LENGTH_SHORT).show();
@@ -152,8 +152,8 @@ public class ConfirmMasechta extends Toolbar_parent {
         });
     }
 
-    //TODO work more on the alarm8
-    //UPDATE 2/2024: Dropped the alarm feature for the foreseeable future. See AlarmSetter.java comments
+    //TODO work more on the alarm
+    //UPDATE 2/2024: Dropped the alarm feature for the foreseeable future. Switched to Calendar reminder. See AlarmSetter.java comments
     public void setAlarm()
     {
         final Calendar endDate = Calendar.getInstance();

@@ -2,6 +2,8 @@ package com.example.mna.mishnapals;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +19,8 @@ public class Case implements Serializable {
     ArrayList<ArrayList<MasechtaStatus>> masechtos;
     List<Integer> date;
     boolean privateCase;
+
+    String firebaseID;
 
     public Case() {
         date = new ArrayList<>();
@@ -138,6 +142,20 @@ public class Case implements Serializable {
     public List<Integer> getDate()
     {
         return date;
+    }
+
+    public Calendar getDateFormat() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(this.getDate().get(0), this.getDate().get(1), this.getDate().get(2));
+        return cal;
+    }
+
+    public String getFirebaseID() {
+        return firebaseID;
+    }
+
+    public void setFirebaseID(String firebaseID) {
+        this.firebaseID = firebaseID;
     }
 
     public ArrayList<ArrayList<MasechtaStatus>> getMasechtos() {return masechtos; }

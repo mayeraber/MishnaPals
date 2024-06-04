@@ -189,8 +189,8 @@ public class MyMishnayos extends Toolbar_parent {  //extends AppCompatActivity {
                             LocalDate localDate = LocalDate.of(YearMonthDay[1], YearMonthDay[2], YearMonthDay[3]);
                             LocalDate today = LocalDate.now();
                             int date_passed = localDate.compareTo((today));
-                            Period p = Period.between(localDate, today);
                             if (date_passed < 0) {
+                                Period p = Period.between(localDate, today);
                                 if (p.getYears() > 1) {
                                     timeRemaining.setText("Time Remaining: Ended " + p.getYears() + " years, " + p.getMonths() + " months, " + p.getDays() + " days ago");
                                 }
@@ -202,7 +202,12 @@ public class MyMishnayos extends Toolbar_parent {  //extends AppCompatActivity {
                                 }
                             }
                             else {
-                                timeRemaining.setText("Time Remaining: " + p.getMonths()+" months, "+p.getDays() + " days");
+                                Period p = Period.between(today, localDate);
+                                if (p.getMonths() > 0){
+                                    timeRemaining.setText("Time Remaining: " + p.getMonths()+" months, "+p.getDays() + " days");
+                                } else {
+                                    timeRemaining.setText("Time Remaining: " + p.getDays() + " days");
+                                }
                             }
                         }else{
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");

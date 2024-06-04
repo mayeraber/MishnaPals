@@ -49,6 +49,8 @@ public class FirebaseUI_Auth extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*
         setContentView(R.layout.activity_sign_in_options);
 
         findViewById(R.id.emailPasswordSignin).setOnClickListener(new View.OnClickListener() {
@@ -78,6 +80,24 @@ public class FirebaseUI_Auth extends AppCompatActivity {
               signOut();
             }
         });
+         */
+        // [START auth_fui_create_intent]
+        // Choose authentication providers
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.GoogleBuilder().build());
+
+        fAuth = FirebaseAuth.getInstance();
+
+        // Create and launch sign-in intent
+        Intent signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .setLogo(R.drawable.title)
+                .setTheme(R.style.LoginTheme)
+                .build();
+        signInLauncher.launch(signInIntent);
+        // [END auth_fui_create_intent]
     }
 
     // [START auth_fui_result]
