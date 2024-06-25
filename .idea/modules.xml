@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MishnaPals.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MishnaPals.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MishnaPals.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MishnaPals.app.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MishnaPals.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MishnaPals.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mishnapals/MishnaPals.mishnapals.iml" filepath="$PROJECT_DIR$/.idea/modules/mishnapals/MishnaPals.mishnapals.iml" />
     </modules>
   </component>
 </project>

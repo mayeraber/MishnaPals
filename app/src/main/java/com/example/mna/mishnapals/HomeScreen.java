@@ -21,10 +21,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,8 +33,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-
-import static com.example.mna.mishnapals.SignInOptions.googleApiClient;
 
 public class HomeScreen extends AppCompatActivity {
 
@@ -179,53 +173,10 @@ public class HomeScreen extends AppCompatActivity {
 
             }
         });
-
-        /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Log.d("CURRENTUSERHome", user.getUid());
-        Intent intent = new Intent(getBaseContext(), MasechtosList.class);
-        startActivity(intent);*/
     }
 
     public void myMishnayosClicked(View view)
     {
         startActivity(new Intent(getBaseContext(), MyMishnayos.class));
     }
-
-
-    /*
-    //specify the options menu, for signing out
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        fAuth = FirebaseAuth.getInstance();
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        googleApiClient= new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-                    }
-                })
-                .addApiIfAvailable(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        MenuInflater inflator = getMenuInflater();
-        inflator.inflate(R.menu.mishna_pals_menu, menu);
-        return true;
-    }
-    */
-
-    /* Used before started using firebaseUI
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        fAuth.signOut();
-        Auth.GoogleSignInApi.signOut(googleApiClient);
-        startActivity(new Intent(getBaseContext(), SignInOptions.class));
-        HomeScreen.this.finish();
-        return true;
-    }
-    */
-
-
 }

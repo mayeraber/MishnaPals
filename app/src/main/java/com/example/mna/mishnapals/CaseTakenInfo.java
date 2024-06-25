@@ -10,6 +10,8 @@ public class CaseTakenInfo {
     private String masechtaTaken;
     public boolean finished;
 
+    public String caseTakenID;
+
     public CaseTakenInfo(){}
 
     public CaseTakenInfo(String masechta){masechtaTaken = masechta;}
@@ -38,5 +40,13 @@ public class CaseTakenInfo {
 
     public void setFinished(boolean finished) {
         this.finished = finished;
+    }
+
+    public String getCaseTakenID() {
+        return caseTakenID;
+    }
+
+    public void setCaseTakenID(String caseTakenID) {
+        this.caseTakenID = caseTakenID;
     }
 }
