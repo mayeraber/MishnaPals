@@ -1,5 +1,9 @@
 package com.example.mna.mishnapals;
 
+import static android.app.PendingIntent.getActivity;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,8 +12,8 @@ import android.graphics.drawable.Icon;
 import android.util.Log;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,14 +23,19 @@ public class SwipeDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     private Drawable icon;
     private ColorDrawable background;
+    private boolean completed;
 
     public SwipeDeleteCallback (CustomAdapter cstadap) {
         super(0, ItemTouchHelper.LEFT);// | ItemTouchHelper.RIGHT);
         cAdapter = cstadap;
         icon = ContextCompat.getDrawable(cAdapter.mReyclerView.getContext(), R.drawable.ic_menu_delete);
-        background =new ColorDrawable(Color.RED);
+        int color = Color.RED;
+        //int colorP = ColorUtils.setAlphaComponent(color, 200);
+        //background =new ColorDrawable(colorP);
+        background =new ColorDrawable(color);
     }
 
+    //took this function code from online
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX,
@@ -63,17 +72,42 @@ public class SwipeDeleteCallback extends ItemTouchHelper.SimpleCallback {
     }
 
     @Override
-    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+    public boolean onMove(RecyclerView recyclerView,  RecyclerView.ViewHolder viewHolder,  RecyclerView.ViewHolder viewHolder1) {
         return false;
     }
 
     //TODO: either show a toast asking user to confirm, esp if not marked completed, or give undo option
     @Override
-    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(cAdapter.mReyclerView.getContext());
         int position = viewHolder.getAbsoluteAdapterPosition();
-        cAdapter.notifyItemRemoved(position);
-        cAdapter.deleteItemFromFirebase(position);
-        cAdapter.cases.remove(position);
+        if (!cAdapter.cases.get(position).isFinished()) {
+            completed = false;
+            builder.setMessage("You have not yet completed this masechta. Are you sure you want to remove it from your account?").setTitle("Confirm Deletion");
+        } else {
+            completed = true;
+            builder.setMessage("This will be removed permanently from your account").setTitle("Confirm Deletion");
+        }
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User taps OK button.
+
+                cAdapter.notifyItemRemoved(position);
+                cAdapter.deleteItemFromFirebase(position, completed);
+                cAdapter.cases.remove(position);
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancels the dialog.
+                cAdapter.notifyItemChanged(viewHolder.getAbsoluteAdapterPosition());
+            }
+        });
+        builder.show();
+
+
+
     }
 
     @Override

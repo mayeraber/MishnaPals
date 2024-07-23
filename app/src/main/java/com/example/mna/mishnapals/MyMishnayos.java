@@ -57,7 +57,7 @@ public class MyMishnayos extends Toolbar_parent {  //extends AppCompatActivity {
 
                 for(DataSnapshot userCase : dataSnapshot.getChildren()){
                     CaseTakenInfo caseTaken = userCase.getValue(CaseTakenInfo.class);
-                    caseTaken.setCaseTakenID(userCase.getKey());
+                    caseTaken.setCaseMasID(userCase.getKey());
                     cases.add(caseTaken);
                 }
 

@@ -211,9 +211,19 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         return cases.size();
     }
 
-    public void deleteItemFromFirebase(int position) {
-        String caseTakenID = cases.get(position).getCaseTakenID();
+    //To use for unpacking instances of the Combo class from CAseTakenInfo.java
+    private static class Combo {
+        int sederNum;
+        int masechtaNum;
+        private Combo(int e1, int e2) {
+            sederNum = e1;
+            masechtaNum = e2;
+        }
+    }
 
+    public void deleteItemFromFirebase(int position, boolean completed) {
+        String caseTakenID = cases.get(position).getCaseId();
+        String caseMasID = cases.get(position).getCaseMasID();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Query currUser = ref.child("users").orderByChild("userEmail").equalTo(user.getEmail());//.getRef().child("cases");
@@ -225,7 +235,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                     dataSnapshot = ds.child("cases");}
 
                 for(DataSnapshot userCase : dataSnapshot.getChildren()){
-                    if (userCase.getKey().equals(caseTakenID)) {
+                    if (userCase.getKey().equals(caseMasID)) {
                         userCase.getRef().removeValue();
                     }
                 }
@@ -236,5 +246,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
             }
         });
+        if (!completed){
+            CaseTakenInfo caseTakenInfo = cases.get(position);
+            CaseTakenInfo ci = new CaseTakenInfo();
+            CaseTakenInfo.Combo masechtaInfo = caseTakenInfo.getSeder();
+            Log.d("msg", "opopopop"+caseTakenID+masechtaInfo.getSederNum()+" "+masechtaInfo.getMasechtaNum());
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+            dbRef.child("cases").child(caseTakenID).child("masechtos").child(""+masechtaInfo.getSederNum()).child(""+masechtaInfo.getMasechtaNum()).child("status").setValue(false);
+        }
     }
 }
