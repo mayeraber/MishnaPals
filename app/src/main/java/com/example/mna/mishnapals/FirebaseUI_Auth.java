@@ -130,8 +130,10 @@ public class FirebaseUI_Auth extends AppCompatActivity {
                         newUser.setCases(null);
                         mDatabase = FirebaseDatabase.getInstance().getReference();
                         usersEndpoint = mDatabase.child("users");
-                        String key = usersEndpoint.push().getKey();
-                        usersEndpoint.child(key).setValue(newUser);
+                        //switched to setting key to uid to help with firebase rules
+                        //String key = usersEndpoint.push().getKey();
+                        //usersEndpoint.child(key).setValue(newUser);
+                        usersEndpoint.child(user.getUid()).setValue(newUser);
                     }
                 }
 

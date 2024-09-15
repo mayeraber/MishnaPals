@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class CompletedMasechta extends Toolbar_parent {
     public void onCreate(Bundle savedInstance){
-        UtilMishnayosNumbers u = new UtilMishnayosNumbers();
+        //UtilMishnayosNumbers u = new UtilMishnayosNumbers();
         super.onCreate(savedInstance);
         setContentView(R.layout.completed_masechta);
 

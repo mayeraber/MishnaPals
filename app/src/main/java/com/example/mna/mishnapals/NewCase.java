@@ -233,7 +233,7 @@ public class NewCase extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus){
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-                    Query caseId = ref.child("cases").orderByChild("caseId").equalTo(caseIdEntry.getText().toString());
+                    Query caseId = ref.child("cases").orderByChild("caseId").equalTo(caseIdEntry.getText().toString().toLowerCase());
 
                     caseId.addListenerForSingleValueEvent(new ValueEventListener() {                        @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -288,7 +288,7 @@ public class NewCase extends AppCompatActivity {
     public void createCaseClicked(View view) {
         boolean idNotMatch = false;
         if (isPrivate) {
-            if (!caseIdEntry.getText().toString().equals(caseIdConfirm.getText().toString())) {
+            if (!caseIdEntry.getText().toString().toLowerCase().equals(caseIdConfirm.getText().toString().toLowerCase())) {
                 idMatch.setCompoundDrawablesWithIntrinsicBounds(R.drawable.indicator_input_error, 0,0,0);
                 idMatch.setVisibility(View.VISIBLE);
                 caseIdConfirm.requestFocus();
@@ -312,7 +312,7 @@ public class NewCase extends AppCompatActivity {
             Log.d("testing new case mas", " "+newCase.masechtos);
 
             if (((CheckBox) findViewById(R.id.makePrivateCheckBox)).isChecked() && caseIdEntry.getText().toString() != null) {
-                newCase.setCaseIdPrivate(caseIdEntry.getText().toString());
+                newCase.setCaseIdPrivate(caseIdEntry.getText().toString().toLowerCase());
                 newCase.setPrivateCase(true);
             } else {
                 newCase.setCaseId(key);

@@ -5,6 +5,9 @@ TODO Maybe add functionality to remove list item with swipe to side
  */
 package com.example.mna.mishnapals;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 //import android.support.v7.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -59,6 +62,19 @@ public class MyMishnayos extends Toolbar_parent {  //extends AppCompatActivity {
                     CaseTakenInfo caseTaken = userCase.getValue(CaseTakenInfo.class);
                     caseTaken.setCaseMasID(userCase.getKey());
                     cases.add(caseTaken);
+                }
+
+                if (cases.size() == 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MyMishnayos.this);
+                    builder.setMessage("You have no active mishnayos");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User taps OK button.
+                            Intent intent = new Intent(MyMishnayos.this, HomeScreen.class);
+                            MyMishnayos.this.startActivity(intent);
+                        }
+                    });
+                    builder.show();
                 }
 
                 rView = findViewById(R.id.recyclerMasechtos);

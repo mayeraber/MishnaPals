@@ -10,15 +10,15 @@ import android.content.Context;
 import android.content.Intent;
 import java.util.GregorianCalendar;
 
-import android.os.Handler;
 //import android.support.v7.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +55,7 @@ public class ConfirmMasechta extends Toolbar_parent {
         confirmPerakim.setText(masechta.numPerakim+"  פרקים");
         TextView confirmMishnayos = (TextView)findViewById(R.id.numMishnayosConfirm);
         confirmMishnayos.setText(masechta.numMishnayos+"  משניות");
+        CheckBox calCheckBox = (CheckBox)findViewById(R.id.calCheckBox);
         Button reserveBut = (Button)findViewById(R.id.confirmMasechtaButton);
         /*final Thread thread = new Thread(){
             @Override
@@ -67,6 +68,14 @@ public class ConfirmMasechta extends Toolbar_parent {
                 }
             }
         };*/
+
+        calCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            }
+        });
+
         /*
         When user confirms selection, add a new 'CaseTakenInfo' to the user's branch in the db, and then set
         the masechta status to true (i.e. taken) in the case's branch in the db. Also set alarm to remind user
@@ -104,24 +113,29 @@ public class ConfirmMasechta extends Toolbar_parent {
                         ref.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+                                Intent intent;
                                 Log.d("hiiiiiiiii", "reached calendar event");
-                                String endYear = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("0").getValue().toString();
-                                String endMonth = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("1").getValue().toString();
-                                String endDay = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("2").getValue().toString();
+                                if (calCheckBox.isChecked()) {
+                                    String endYear = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("0").getValue().toString();
+                                    String endMonth = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("1").getValue().toString();
+                                    String endDay = dataSnapshot.child("cases").child(caseTakenKey).child("date").child("2").getValue().toString();
 
-                                //add event to users calendar
-                                Calendar beginTime = Calendar.getInstance();
-                                //calendar months start at '0', so subtract one from month
-                                beginTime.set(Integer.parseInt(endYear), (Integer.parseInt(endMonth)-1), (Integer.parseInt(endDay)), 12, 00 ,0);
-                                Calendar endTime = Calendar.getInstance();
-                                endTime.set(Integer.parseInt(endYear), (Integer.parseInt(endMonth)-1), (Integer.parseInt(endDay)), 14, 00 ,0);
-                                Intent intent = new Intent(Intent.ACTION_INSERT)
-                                        .setData(Events.CONTENT_URI)
-                                        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
-                                        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
-                                        .putExtra(Events.TITLE, "MishnaPals Reminder")
-                                        .putExtra(Events.DESCRIPTION, "Finish mishnayos " + masechta.hebName +" tonight");
-                                        //.putExtra(Intent.EXTRA_EMAIL, "rowan@example.com,trevor@example.com");
+                                    //add event to users calendar
+                                    Calendar beginTime = Calendar.getInstance();
+                                    //calendar months start at '0', so subtract one from month
+                                    beginTime.set(Integer.parseInt(endYear), (Integer.parseInt(endMonth) - 1), (Integer.parseInt(endDay)), 12, 00, 0);
+                                    Calendar endTime = Calendar.getInstance();
+                                    endTime.set(Integer.parseInt(endYear), (Integer.parseInt(endMonth) - 1), (Integer.parseInt(endDay)), 14, 00, 0);
+                                    intent = new Intent(Intent.ACTION_INSERT)
+                                            .setData(Events.CONTENT_URI)
+                                            .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+                                            .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                                            .putExtra(Events.TITLE, "MishnaPals Reminder")
+                                            .putExtra(Events.DESCRIPTION, "Finish mishnayos " + masechta.hebName + " tonight");
+                                    //.putExtra(Intent.EXTRA_EMAIL, "rowan@example.com,trevor@example.com");
+                                } else {
+                                    intent = new Intent(getBaseContext(), MyMishnayos.class);
+                                }
                                 findViewById(R.id.timerCircle).setVisibility(View.INVISIBLE);
                                 Toast.makeText(getBaseContext(), "Success!!", Toast.LENGTH_SHORT).show();
                                 ConfirmMasechta.this.finish();

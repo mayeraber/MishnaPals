@@ -1,6 +1,5 @@
 package com.example.mna.mishnapals;
 
-import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.util.Log;
@@ -8,12 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,7 +16,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -36,6 +29,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     protected ArrayList<CaseTakenInfo> cases;
     private View.OnClickListener mOnClickLis;
     RecyclerView mReyclerView;
+
+    UtilMishnayosNumbers u;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -87,6 +82,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
      */
     public CustomAdapter(ArrayList<CaseTakenInfo> casesList) {
         cases = casesList;
+        u = new UtilMishnayosNumbers();
     }
 
     // Create new views (invoked by the layout manager)
@@ -111,8 +107,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
         final CaseTakenInfo caseTaken = cases.get(position);
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
         /*
         Populate 'cases' arraylist from user's branch in db with the cases this user participates in
          */
@@ -125,6 +119,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewHolder.getNameNiftar().setText("Name of Niftar: " + ((String) dataSnapshot.getValue()));
                 viewHolder.getCompletionStatus().setText("Status: " + (caseTaken.isFinished() ? "Completed" : "Not Completed"));
+                if (!caseTaken.isFinished()) {
+                    viewHolder.getCompletionStatus().setTextColor(Color.RED);
+                }
                 viewHolder.getMasechta().setText("Masechta: " + caseTaken.getMasechtaTaken());
             }
 
@@ -211,7 +208,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         return cases.size();
     }
 
-    //To use for unpacking instances of the Combo class from CAseTakenInfo.java
+    /*
+    //To use for unpacking instances of the Combo class from CaseTakenInfo.java
     private static class Combo {
         int sederNum;
         int masechtaNum;
@@ -220,7 +218,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             masechtaNum = e2;
         }
     }
-
+    */
     public void deleteItemFromFirebase(int position, boolean completed) {
         String caseTakenID = cases.get(position).getCaseId();
         String caseMasID = cases.get(position).getCaseMasID();
@@ -248,11 +246,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         });
         if (!completed){
             CaseTakenInfo caseTakenInfo = cases.get(position);
-            CaseTakenInfo ci = new CaseTakenInfo();
-            CaseTakenInfo.Combo masechtaInfo = caseTakenInfo.getSeder();
-            Log.d("msg", "opopopop"+caseTakenID+masechtaInfo.getSederNum()+" "+masechtaInfo.getMasechtaNum());
+            String masechtaTaken = caseTakenInfo.getMasechtaTaken();
+            //Combo masechtaInfo = caseTakenInfo.getSeder();
+            Log.d("msg", "11111"+masechtaTaken);
+            Log.d("msg", "opopopop"+UtilMishnayosNumbers.mishnaNums.get(masechtaTaken));
             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-            dbRef.child("cases").child(caseTakenID).child("masechtos").child(""+masechtaInfo.getSederNum()).child(""+masechtaInfo.getMasechtaNum()).child("status").setValue(false);
+            dbRef.child("cases").child(caseTakenID).child("masechtos").child(""+UtilMishnayosNumbers.mishnaNums.get(masechtaTaken).getSederNum()).child(""+UtilMishnayosNumbers.mishnaNums.get(masechtaTaken).getMasechtaNum()).child("status").setValue(false);
         }
     }
 }

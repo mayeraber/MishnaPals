@@ -38,7 +38,7 @@ public class SearchResult extends Toolbar_parent{//AppCompatActivity{
         TextView searchResultDate = (TextView)findViewById(R.id.searchResultDate);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        Query caseId = ref.child("cases").orderByChild("caseId").equalTo(getIntent().getStringExtra("caseId"));
+        Query caseId = ref.child("cases").orderByChild("caseId").equalTo(getIntent().getStringExtra("caseId").toLowerCase());
         //TODO Add email address to contact admin
                 caseId.addListenerForSingleValueEvent(new ValueEventListener() {                        @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

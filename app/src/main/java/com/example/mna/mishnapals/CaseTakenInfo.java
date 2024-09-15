@@ -61,22 +61,8 @@ public class CaseTakenInfo {
     //and we then need to set its 'taken' value in the 'cases' list to false.
     //TODO perhaps set this up in a different way so that it doesnt have to be stored in the tree for each taken masechta,
     // like perhaps set it static in the database
-    public static class Combo {
-        int sederNum;
 
-        int masechtaNum;
-        public Combo(int e1, int e2) {
-            sederNum = e1;
-            masechtaNum = e2;
-        }
-
-        public int getSederNum() {
-            return sederNum;
-        }
-        public int getMasechtaNum() {
-            return masechtaNum;
-        }
-    }
+    /* 7/24/24 realized no need, because have util class
     public Combo getSeder() {
 
         int position = -1;
@@ -113,4 +99,5 @@ public class CaseTakenInfo {
 
         return null;
     }
+    */
 }

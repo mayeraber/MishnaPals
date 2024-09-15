@@ -16,6 +16,8 @@ public class Case implements Serializable {
     //Calendar endDate;
     String caseId;
     //List<List<MasechtaStatus>> masechtos;
+    //save case id as entered by user to show on-screen to be more user friendly
+    String caseId_raw;
     ArrayList<ArrayList<MasechtaStatus>> masechtos;
     List<Integer> date;
     boolean privateCase;
@@ -39,8 +41,13 @@ public class Case implements Serializable {
         return caseId;
     }
 
+    public String getCaseIdRaw() {
+        return caseId_raw;
+    }
+
     public void setCaseId(String caseId) {
         this.caseId = caseId.substring(caseId.length() - 5, caseId.length());
+        this.caseId_raw = caseId.substring(caseId.length() - 5, caseId.length());
     }
 
     public void setCaseIdPrivate(String caseId) {
