@@ -1,5 +1,7 @@
 package com.example.mna.mishnapals;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.util.Log;
@@ -29,7 +31,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     protected ArrayList<CaseTakenInfo> cases;
     private View.OnClickListener mOnClickLis;
     RecyclerView mReyclerView;
-
+    protected Activity context;
     UtilMishnayosNumbers u;
 
     /**
@@ -39,6 +41,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView masechta;
         TextView nameNiftar;
+        TextView nameFather;
         TextView dateNiftar;
         TextView timeRemaining;
         TextView completionStatus;
@@ -48,6 +51,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             // Define click listener for the ViewHolder's View
             masechta = (TextView) itemView.findViewById(R.id.masechtaName);
             nameNiftar = (TextView) itemView.findViewById(R.id.nameNiftar);
+            nameFather = (TextView) itemView.findViewById(R.id.nameFather);
             dateNiftar = (TextView) itemView.findViewById(R.id.dateNiftar);
             timeRemaining = (TextView) itemView.findViewById(R.id.timeRemaining);
             completionStatus = (TextView) itemView.findViewById(R.id.completionStatus);
@@ -59,6 +63,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
         public TextView getNameNiftar() {
             return nameNiftar;
+        }
+
+        public TextView getNameFather() {
+            return nameFather;
         }
 
         public TextView getDateNiftar() {
@@ -80,9 +88,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
      * @param casesList CaseTakenInfo containing the data to populate views to be used
      *                  by RecyclerView
      */
-    public CustomAdapter(ArrayList<CaseTakenInfo> casesList) {
+    public CustomAdapter(ArrayList<CaseTakenInfo> casesList, Activity context) {
         cases = casesList;
         u = new UtilMishnayosNumbers();
+        this.context = context;
     }
 
     // Create new views (invoked by the layout manager)
@@ -97,7 +106,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.my_masechta, viewGroup, false);
-        mOnClickLis = new MyMishnayosOnClickListener(mReyclerView, cases);
+        mOnClickLis = new MyMishnayosOnClickListener(mReyclerView, cases, this.context);
         view.setOnClickListener(mOnClickLis);
         return new ViewHolder(view);
     }
@@ -111,46 +120,29 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         Populate 'cases' arraylist from user's branch in db with the cases this user participates in
          */
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference().child("cases");
-
         DatabaseReference dref = dbref.child(caseTaken.getCaseId());
-        dref = dref.child("firstName");
         dref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                viewHolder.getNameNiftar().setText("Name of Niftar: " + ((String) dataSnapshot.getValue()));
+                Case nextCase = dataSnapshot.getValue(Case.class);
+                nextCase.setFirebaseID(dataSnapshot.getKey());
+                viewHolder.getNameNiftar().setText("Name of Niftar: " + (nextCase.getFirstName()));
+                viewHolder.getNameFather().setText("Name of Father: " + (nextCase.getFathersName()));
                 viewHolder.getCompletionStatus().setText("Status: " + (caseTaken.isFinished() ? "Completed" : "Not Completed"));
                 if (!caseTaken.isFinished()) {
                     viewHolder.getCompletionStatus().setTextColor(Color.RED);
                 }
                 viewHolder.getMasechta().setText("Masechta: " + caseTaken.getMasechtaTaken());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        //final TextView dateNiftar = (TextView) v.findViewById(R.id.dateNiftar);
-        //final TextView timeRemaining = (TextView) v.findViewById(R.id.timeRemaining);
-        final ColorStateList textViewDefaultColor = viewHolder.getDateNiftar().getTextColors();
-        dref = dbref.child(caseTaken.getCaseId()).child("date");
-        dref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Integer[] YearMonthDay = new Integer[4];
+                Integer[] YearMonthDay = nextCase.getDate().toArray(new Integer[0]);
                 String date = "";
-                int counter = 0;
-                for (DataSnapshot sp : dataSnapshot.getChildren()) {
-                    counter++;
-                    YearMonthDay[counter] = sp.getValue(Integer.class);
-                    date += sp.getValue(Integer.class) + (counter < 3 ? "/" : "");
+                for (int i=0; i<3; i++) {
+                    date += YearMonthDay[i] + (i < 2 ? "/" : "");
                 }
                 // dateNiftar.setText(dataSnapshot.child("0").getValue(Integer.class));
                 viewHolder.getDateNiftar().setText("End Date: " + date);
-
+                final ColorStateList textViewDefaultColor = viewHolder.getDateNiftar().getTextColors();
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    LocalDate localDate = LocalDate.of(YearMonthDay[1], YearMonthDay[2], YearMonthDay[3]);
+                    LocalDate localDate = LocalDate.of(YearMonthDay[0], YearMonthDay[1], YearMonthDay[2]);
                     LocalDate today = LocalDate.now();
                     int date_passed = localDate.compareTo((today));
                     if (date_passed < 0) {
@@ -199,7 +191,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
             }
         });
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -220,6 +211,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     }
     */
     public void deleteItemFromFirebase(int position, boolean completed) {
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, null != cases ? cases.size() : 0);
+
         String caseTakenID = cases.get(position).getCaseId();
         String caseMasID = cases.get(position).getCaseMasID();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -228,7 +222,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         currUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                cases.clear();
+                //cases.clear();
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     dataSnapshot = ds.child("cases");}
 
@@ -244,6 +238,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
             }
         });
+
         if (!completed){
             CaseTakenInfo caseTakenInfo = cases.get(position);
             String masechtaTaken = caseTakenInfo.getMasechtaTaken();

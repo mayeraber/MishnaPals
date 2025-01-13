@@ -83,6 +83,7 @@ public class HomeScreen extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent intent = new Intent(getBaseContext(), HomeScreen.class);
                         startActivity(intent);
+                        finish();
                     }
                 }
         );

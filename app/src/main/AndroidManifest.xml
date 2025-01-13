@@ -17,6 +17,8 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         <activity
             android:name=".HomeScreen"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +26,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NewCase" />
+        <activity android:name=".NewCase"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <activity android:name=".MasechtosList" />
         <activity android:name=".SedarimList" />
         <activity android:name=".ConfirmMasechta" />

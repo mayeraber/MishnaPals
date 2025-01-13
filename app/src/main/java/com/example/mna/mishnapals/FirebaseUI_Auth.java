@@ -93,7 +93,7 @@ public class FirebaseUI_Auth extends AppCompatActivity {
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
-                .setLogo(R.drawable.title)
+                //.setLogo(R.drawable.round_logo_words)
                 .setTheme(R.style.LoginTheme)
                 .build();
         signInLauncher.launch(signInIntent);
@@ -144,9 +144,10 @@ public class FirebaseUI_Auth extends AppCompatActivity {
             });
 
             startActivity(new Intent(getBaseContext(), HomeScreen.class));
+            finish();
 
         } else {
-                Log.d("d", ""+response.getError().getErrorCode());
+                //Log.d("d", ""+response.getError().getErrorCode());
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.

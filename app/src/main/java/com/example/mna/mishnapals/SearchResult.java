@@ -53,7 +53,7 @@ public class SearchResult extends Toolbar_parent{//AppCompatActivity{
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");;//new SimpleDateFormat("MM/dd/yyyy");
 
                             try {
-                                searchResultName.setText((String) snapshot.child("firstName").getValue() + " ben " + snapshot.child("fathersName").getValue() + "\n"  + formatWithMonthName.format(simpleDateFormat.parse(date)));//date);
+                                searchResultName.setText((String) snapshot.child("firstName").getValue() + " ben/bas " + snapshot.child("fathersName").getValue() + "\n"  + formatWithMonthName.format(simpleDateFormat.parse(date)));//date);
                                 //Note: In ablove line the newline character wasnt working until I removed the 'inputType:textPersonName' from the XML
                             } catch (ParseException e) {
                                 e.printStackTrace();

@@ -140,6 +140,8 @@ public class ConfirmMasechta extends Toolbar_parent {
                                 Toast.makeText(getBaseContext(), "Success!!", Toast.LENGTH_SHORT).show();
                                 ConfirmMasechta.this.finish();
                                 startActivity(intent);
+                                finish();
+
                             }
 
                             @Override

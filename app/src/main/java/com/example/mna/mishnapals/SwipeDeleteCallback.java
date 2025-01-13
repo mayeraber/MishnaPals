@@ -76,7 +76,7 @@ public class SwipeDeleteCallback extends ItemTouchHelper.SimpleCallback {
         return false;
     }
 
-    //TODO: either show a toast asking user to confirm, esp if not marked completed, or give undo option
+    //TODO: perhaps give undo option
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
         AlertDialog.Builder builder = new AlertDialog.Builder(cAdapter.mReyclerView.getContext());
@@ -92,9 +92,10 @@ public class SwipeDeleteCallback extends ItemTouchHelper.SimpleCallback {
             public void onClick(DialogInterface dialog, int id) {
                 // User taps OK button.
 
-                cAdapter.notifyItemRemoved(position);
                 cAdapter.deleteItemFromFirebase(position, completed);
                 cAdapter.cases.remove(position);
+                cAdapter.notifyItemRemoved(position);
+                cAdapter.notifyItemRangeChanged(position, null != cAdapter.cases ? cAdapter.cases.size() : 0);
 
             }
         });

@@ -14,7 +14,6 @@ import android.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 //import android.support.v7.view.ActionMode;
-import androidx.appcompat.view.ActionMode;
 
 import android.util.Log;
 import android.view.View;
@@ -41,8 +40,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+//import java.util.Calendar;
 
-import java.util.GregorianCalendar;
+//import java.util.GregorianCalendar;
 
 import static java.util.Calendar.YEAR;
 
@@ -61,7 +61,7 @@ public class NewCase extends AppCompatActivity {
     TextView shloshimDateLabel;
     int day, month, year;
     String[] dateSplit;
-    Calendar dateNiftarCal = new GregorianCalendar();
+    //Calendar dateNiftarCal = new GregorianCalendar();
     DatePickerDialog datePickerDialog;
     AlertDialog.Builder info;
     private DatabaseReference mDatabase, casesEndpoint, usersEndpoint;
@@ -293,6 +293,12 @@ public class NewCase extends AppCompatActivity {
                 idMatch.setVisibility(View.VISIBLE);
                 caseIdConfirm.requestFocus();
                 idNotMatch = true;
+                idMatch.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        idMatch.setVisibility(View.GONE);
+                    }
+                }, 4000);
             } else {
                 idMatch.setVisibility(View.GONE);
                 idNotMatch = false;
@@ -302,7 +308,7 @@ public class NewCase extends AppCompatActivity {
         if (!isEmpty(niftarName) && !isEmpty(fatherName) && !isEmpty(dateNiftar) && !idNotMatch) {
 
             Case newCase = new Case(niftarName.getText().toString(), fatherName.getText().toString());
-            newCase.setDate(Integer.parseInt(dateSplit[1]), Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[2]));
+            newCase.setEndShloshim(Integer.parseInt(dateSplit[1]), Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[2]));
 
             //store in firebase db
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

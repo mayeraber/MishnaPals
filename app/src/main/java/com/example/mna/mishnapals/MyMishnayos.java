@@ -5,7 +5,9 @@ TODO Maybe add functionality to remove list item with swipe to side
  */
 package com.example.mna.mishnapals;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,12 +40,12 @@ public class MyMishnayos extends Toolbar_parent {  //extends AppCompatActivity {
     protected CustomAdapter cAdapter;
     protected RecyclerView.LayoutManager rLayout;
     protected ArrayList<CaseTakenInfo> cases = new ArrayList<>();
-
+    protected Activity context;
     public void onCreate(Bundle savedInstance)
     {
         super.onCreate(savedInstance);
         setContentView(R.layout.my_mishnayos2);
-
+        context = this;
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
 
@@ -70,8 +72,9 @@ public class MyMishnayos extends Toolbar_parent {  //extends AppCompatActivity {
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // User taps OK button.
-                            Intent intent = new Intent(MyMishnayos.this, HomeScreen.class);
-                            MyMishnayos.this.startActivity(intent);
+                            //Intent intent = new Intent(MyMishnayos.this, HomeScreen.class);
+                            //MyMishnayos.this.startActivity(intent);
+                            finish();
                         }
                     });
                     builder.show();
@@ -81,7 +84,8 @@ public class MyMishnayos extends Toolbar_parent {  //extends AppCompatActivity {
                 rLayout = new LinearLayoutManager(MyMishnayos.this);
                 rView.setLayoutManager(rLayout);
                 rView.addItemDecoration(new DividerItemDecoration(rView.getContext(), DividerItemDecoration.VERTICAL));
-                cAdapter = new CustomAdapter(cases);
+                Activity activity = (Activity) context;
+                cAdapter = new CustomAdapter(cases, activity);
                 rView.setAdapter(cAdapter);
 
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeDeleteCallback(cAdapter));

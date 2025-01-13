@@ -3,7 +3,6 @@ If user chooses from home screen to view all public cases, this is where he is b
  */
 package com.example.mna.mishnapals;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 //import android.support.v7.app.AppCompatActivity;
@@ -13,11 +12,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -39,19 +37,24 @@ public class PublicCases extends Toolbar_parent {
 
         ArrayList<String> cases = new ArrayList<>();
 
-        Collections.sort(publicCases, (o1, o2) -> o1.getDateFormat().compareTo(o2.getDateFormat()));
+        Collections.sort(publicCases, (o1, o2) -> o1.shloshimDateCal().compareTo(o2.shloshimDateCal()));
         //if up the min SDK to 24, can switch to:
         //Collections.sort(publicCases, Comparator.comparing(Case::getDateFormat));
+        Log.d("test", caseNames.size() +" " +cases.size());
 
+        final ArrayList<Case> currentPublicCases = new ArrayList<Case>();
+        final ArrayList<String> currentPublicCaseIds = new ArrayList<>();
         for (int i = 0; i < caseNames.size(); i++) {
             Log.d("test", "begggggggggggggggggggggggggg");
             Case caseInfo = publicCases.get(i);
             List<Integer> date = caseInfo.getDate();
-            Calendar endDate = caseInfo.getDateFormat();
+            Calendar endDate = caseInfo.shloshimDateCal();
             if (!Calendar.getInstance().after(endDate)) {
                 String finishDate = (date.get(1) + "/" + date.get(2) + "/" + date.get(0));
                 cases.add(publicCases.get(i).getFirstName() + "\nFinish by: " + finishDate);
-                Log.d("date", ""+publicCases.get(i).getFirstName() + "\nFinish by: " + finishDate);
+                Log.d("date", "" + publicCases.get(i).getFirstName() + "\nFinish by: " + finishDate);
+                currentPublicCases.add(caseInfo);
+                currentPublicCaseIds.add(caseInfo.caseId);
             }
         }
         //String[] cases = Arrays.stream(cases).toArray()
@@ -64,11 +67,11 @@ public class PublicCases extends Toolbar_parent {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                     Log.d("test", "in clickkkkkkkkkkkkkkkkkkkk");
-                    Case caseTakenInfo = publicCases.get(position);
+                    Case caseTakenInfo = currentPublicCases.get(position);
                     Intent intent = new Intent(getBaseContext(), MasechtosList.class);
                     Log.d("lololol", caseTakenInfo.getCaseId());
-                    Log.d("opopopo", publicCaseIds.get(0));
-                    startActivity(new Intent(getBaseContext(), MasechtosList.class).putExtra("caseId", caseTakenInfo.getCaseId()).putExtra("caseKey", publicCases.get(position).getFirebaseID()));
+                    //Log.d("opopopo", currentPublicCaseIds.get(0));
+                    startActivity(new Intent(getBaseContext(), MasechtosList.class).putExtra("caseId", caseTakenInfo.getCaseId()).putExtra("caseKey", currentPublicCases.get(position).getFirebaseID()));
                 }
             });
         }

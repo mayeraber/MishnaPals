@@ -19,6 +19,12 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/nameFather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/dateNiftar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

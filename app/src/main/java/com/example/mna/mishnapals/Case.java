@@ -3,7 +3,7 @@ package com.example.mna.mishnapals;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+//import java.util.Date;
 import java.util.List;
 
 /**
@@ -140,7 +140,8 @@ public class Case implements Serializable {
             this.privateCase = privateCase;
         }
 
-    public void setDate(int day, int month, int year)
+    //changed some date function names to avoid conflicts with firebase built-in functions
+    public void setEndShloshim(int day, int month, int year)
     {
         date.add(year);
         date.add(month);
@@ -151,7 +152,7 @@ public class Case implements Serializable {
         return date;
     }
 
-    public Calendar getDateFormat() {
+    public Calendar shloshimDateCal() {
         Calendar cal = Calendar.getInstance();
         cal.set(this.getDate().get(0), this.getDate().get(1), this.getDate().get(2));
         return cal;

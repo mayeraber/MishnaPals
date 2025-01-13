@@ -1,5 +1,7 @@
 package com.example.mna.mishnapals;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -12,10 +14,12 @@ public class MyMishnayosOnClickListener implements View.OnClickListener{
 
     protected ArrayList<CaseTakenInfo> cases;
     RecyclerView mrecy;
+    protected Activity context;
 
-    public MyMishnayosOnClickListener(RecyclerView madap, ArrayList<CaseTakenInfo> mycases) {
+    public MyMishnayosOnClickListener(RecyclerView madap, ArrayList<CaseTakenInfo> mycases, Activity context) {
         mrecy = madap;
         cases = mycases;
+        this.context = context;
     }
 
     @Override
@@ -26,6 +30,8 @@ public class MyMishnayosOnClickListener implements View.OnClickListener{
             intent.putExtra("caseId", cases.get(position).getCaseId());
             intent.putExtra("masechta", cases.get(position).getMasechtaTaken());
             v.getContext().startActivity(intent);
+            context.finish();
+
             //TODO maybe change to manually update the listitem instead of ending activity and then restarting
         }
     }

@@ -212,7 +212,6 @@
         android:text="  \?  " />
 
 
-
     <TextView
         android:id="@+id/idTaken"
         android:layout_width="wrap_content"
@@ -220,9 +219,10 @@
         android:layout_alignBottom="@id/caseIdEntry"
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/caseIdEntry"
-        android:textSize="20dp"
+        android:breakStrategy="simple"
         android:drawableLeft="@drawable/indicator_input_error"
         android:drawablePadding="5dp"
+        android:textSize="10sp"
         android:visibility="gone" />
 
     <TextView
@@ -232,10 +232,11 @@
         android:layout_alignBottom="@id/caseIDConfirm"
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/caseIDConfirm"
-        android:text="IDs must match"
-        android:textSize="20dp"
+        android:breakStrategy="simple"
         android:drawableLeft="@drawable/indicator_input_error"
         android:drawablePadding="5dp"
+        android:text="IDs must match"
+        android:textSize="10sp"
         android:visibility="gone" />
 
 
