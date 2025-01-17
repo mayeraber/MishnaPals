@@ -18,6 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -87,6 +90,17 @@ public class MyMishnayos extends Toolbar_parent {  //extends AppCompatActivity {
                 Activity activity = (Activity) context;
                 cAdapter = new CustomAdapter(cases, activity);
                 rView.setAdapter(cAdapter);
+
+                rView.getViewTreeObserver().addOnGlobalLayoutListener(
+                        new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                ProgressBar pBar = findViewById(R.id.progressBarMyMishnayos);
+                                pBar.setVisibility(View.GONE);
+                                rView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            }
+                        }
+                );
 
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeDeleteCallback(cAdapter));
                 itemTouchHelper.attachToRecyclerView(rView);

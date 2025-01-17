@@ -305,7 +305,8 @@ public class NewCase extends AppCompatActivity {
             }
         }
 
-        if (!isEmpty(niftarName) && !isEmpty(fatherName) && !isEmpty(dateNiftar) && !idNotMatch) {
+        boolean internetConnected = InternetCheckUtility.internetStatus();
+        if (internetConnected && !isEmpty(niftarName) && !isEmpty(fatherName) && !isEmpty(dateNiftar) && !idNotMatch) {
 
             Case newCase = new Case(niftarName.getText().toString(), fatherName.getText().toString());
             newCase.setEndShloshim(Integer.parseInt(dateSplit[1]), Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[2]));
@@ -330,6 +331,8 @@ public class NewCase extends AppCompatActivity {
             intent.putExtra("caseKey", key);
             startActivity(intent);
             this.finish();
+        } else if (!internetConnected) {
+            Toast.makeText(this, "Please check your internet connection - It looks like you might be offline", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
         }

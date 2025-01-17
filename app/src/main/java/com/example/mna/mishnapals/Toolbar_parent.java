@@ -37,6 +37,7 @@ public abstract class Toolbar_parent extends AppCompatActivity {
         myToolbar.setNavigationOnClickListener(
                 v -> {
                     Intent intent = new Intent(getBaseContext(), HomeScreen.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
         );

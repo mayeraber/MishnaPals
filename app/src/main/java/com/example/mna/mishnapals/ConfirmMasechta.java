@@ -85,6 +85,10 @@ public class ConfirmMasechta extends Toolbar_parent {
         reserveBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean internetConnected = InternetCheckUtility.internetStatus();
+                if (!internetConnected) {
+                    Toast.makeText(ConfirmMasechta.this, "Please check your internet connection - It looks like you might be offline", Toast.LENGTH_SHORT).show();
+                } else {
                 findViewById(R.id.timerCircle).setVisibility(View.VISIBLE);
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -163,7 +167,7 @@ public class ConfirmMasechta extends Toolbar_parent {
                         */
                         //thread.start();
                     }
-                });
+                });}
             }
         });
     }

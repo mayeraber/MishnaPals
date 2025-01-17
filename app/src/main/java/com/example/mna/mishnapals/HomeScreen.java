@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -126,9 +127,14 @@ public class HomeScreen extends AppCompatActivity {
         searchCaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), SearchResult.class);
-                intent.putExtra("caseId", caseSearch.getText().toString());
-                startActivity(intent);
+                boolean internetConnected = InternetCheckUtility.internetStatus();
+                if (!internetConnected) {
+                    Toast.makeText(HomeScreen.this, "Please check your internet connection - It looks like you might be offline", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(getBaseContext(), SearchResult.class);
+                    intent.putExtra("caseId", caseSearch.getText().toString());
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -142,8 +148,12 @@ public class HomeScreen extends AppCompatActivity {
     Check db for the public cases, put them into an arraylist and package into Intent to
     pass to "PublicCases' class
      */
-    public void viewAllClicked(View view)
+    public void viewAllClicked_old(View view)
     {
+        boolean internetConnected = InternetCheckUtility.internetStatus();
+        if (!internetConnected) {
+            Toast.makeText(HomeScreen.this, "Please check your internet connection - It looks like you might be offline", Toast.LENGTH_SHORT).show();
+        } else {
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference();
         Query publicCase = dbref.child("cases").orderByChild("privateCase").equalTo(false);
         publicCase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -173,11 +183,24 @@ public class HomeScreen extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });}
+    }
+
+    public void viewAllClicked(View view)
+    {
+        boolean internetConnected = InternetCheckUtility.internetStatus();
+        if (!internetConnected) {
+            Toast.makeText(HomeScreen.this, "Please check your internet connection - It looks like you might be offline", Toast.LENGTH_SHORT).show();
+        } else {
+            startActivity(new Intent(getBaseContext(), PublicCases.class));}
     }
 
     public void myMishnayosClicked(View view)
     {
-        startActivity(new Intent(getBaseContext(), MyMishnayos.class));
+        boolean internetConnected = InternetCheckUtility.internetStatus();
+        if (!internetConnected) {
+            Toast.makeText(HomeScreen.this, "Please check your internet connection - It looks like you might be offline", Toast.LENGTH_SHORT).show();
+        } else {
+        startActivity(new Intent(getBaseContext(), MyMishnayos.class));}
     }
 }

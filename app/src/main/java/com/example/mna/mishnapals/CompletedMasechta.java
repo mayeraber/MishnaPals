@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,6 +40,11 @@ public class CompletedMasechta extends Toolbar_parent {
         findViewById(R.id.completedMasechtaBut).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean internetConnected = InternetCheckUtility.internetStatus();
+                if (!internetConnected) {
+                    Toast.makeText(CompletedMasechta.this, "Please check your internet connection - It looks like you might be offline", Toast.LENGTH_SHORT).show();
+                }
+                else{
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 final DatabaseReference refRoot = FirebaseDatabase.getInstance().getReference();
                 Query currUser = refRoot.child("users").orderByChild("userEmail").equalTo(user.getEmail());
@@ -88,7 +94,7 @@ public class CompletedMasechta extends Toolbar_parent {
                         CompletedMasechta.this.finish();
                     }
                 },1000);
-            }
+            }}
         });
     }
 }
