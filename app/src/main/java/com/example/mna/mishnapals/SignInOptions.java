@@ -33,7 +33,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class SignInOptions extends AppCompatActivity {
-    //TODO Check if safe to have this protected to give access in drop-menu in homescreen
     protected static GoogleApiClient googleApiClient;
 
     private static final int RC_SIGN_IN = 9001;

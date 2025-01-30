@@ -9,18 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 
 public abstract class Toolbar_parent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        /*setContentView(getLayoutResource());
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-        myToolbar.setNavigationIcon(R.drawable.ic_menu_home);
-        myToolbar.setNavigationOnClickListener(
-                v -> {
-                    Intent intent = new Intent(getBaseContext(), MyMishnayos.class);
-                    startActivity(intent);
-                }
-        );*/
     }
 
     @Override

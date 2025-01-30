@@ -76,7 +76,6 @@ public class SwipeDeleteCallback extends ItemTouchHelper.SimpleCallback {
         return false;
     }
 
-    //TODO: perhaps give undo option
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
         AlertDialog.Builder builder = new AlertDialog.Builder(cAdapter.mReyclerView.getContext());

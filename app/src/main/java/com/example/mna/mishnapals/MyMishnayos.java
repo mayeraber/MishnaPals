@@ -1,7 +1,6 @@
 /*
 Displays list of user's taken masechtos and allows user to choose one and open 'CompletedMasechta' activity
 to then be able to change status to completed
-TODO Maybe add functionality to remove list item with swipe to side
  */
 package com.example.mna.mishnapals;
 

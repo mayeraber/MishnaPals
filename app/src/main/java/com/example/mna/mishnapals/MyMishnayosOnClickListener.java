@@ -37,8 +37,6 @@ public class MyMishnayosOnClickListener implements View.OnClickListener{
                     intent.putExtra("masechta", cases.get(position).getMasechtaTaken());
                     v.getContext().startActivity(intent);
                     context.finish();
-
-                    //TODO maybe change to manually update the listitem instead of ending activity and then restarting
                 }
             }
     }

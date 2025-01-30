@@ -35,8 +35,6 @@ public class CompletedMasechta extends Toolbar_parent {
         TextView masechta = (TextView)findViewById(R.id.masechtaCompleted);
         masechta.setText(getIntent().getStringExtra("masechta"));
 
-        //masechta.setText(getIntent().getStringExtra("masechta"));
-
         findViewById(R.id.completedMasechtaBut).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

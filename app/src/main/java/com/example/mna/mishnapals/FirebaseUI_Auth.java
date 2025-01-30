@@ -49,39 +49,6 @@ public class FirebaseUI_Auth extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /*
-        setContentView(R.layout.activity_sign_in_options);
-
-        findViewById(R.id.emailPasswordSignin).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // [START auth_fui_create_intent]
-                // Choose authentication providers
-                List<AuthUI.IdpConfig> providers = Arrays.asList(
-                        new AuthUI.IdpConfig.EmailBuilder().build(),
-                        new AuthUI.IdpConfig.GoogleBuilder().build());
-
-                fAuth = FirebaseAuth.getInstance();
-
-                // Create and launch sign-in intent
-                Intent signInIntent = AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .setLogo(R.drawable.bubble_circle)
-                        .build();
-                signInLauncher.launch(signInIntent);
-                // [END auth_fui_create_intent]
-            }
-        });
-        findViewById(R.id.signOutButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              signOut();
-            }
-        });
-         */
-        // [START auth_fui_create_intent]
         // Choose authentication providers
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),

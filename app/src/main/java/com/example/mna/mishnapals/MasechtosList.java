@@ -76,15 +76,8 @@ public class MasechtosList extends Toolbar_parent {
         reserveButton = (Button)findViewById(R.id.reserveMasechtaButton);
         createMasechtos();  //method to populate the 'allSedarim' ArrayList and 'masechtos' hashmap
 
-        //caseId = getIntent().getStringExtra("caseId");
         caseKey = getIntent().getStringExtra("caseKey");
-        //Log.d("caseKey", caseKey);
 
-       /* TextView sederTitle = (TextView)findViewById(R.id.sederTitle);
-        Drawable bubble = getResources().getDrawable(R.drawable.bubble);
-        bubble.setBounds(0,0,20,20);
-        sederTitle.setCompoundDrawables(bubble, null, null, null);*/
-        // ListView listView = (ListView)findViewById(R.id.masechtosListView);
         TextView sederH = (TextView)findViewById(R.id.sederTitle);
 
         ExpandableListView expandableListView = (ExpandableListView)findViewById(R.id.masechtosListView);
@@ -93,21 +86,6 @@ public class MasechtosList extends Toolbar_parent {
 
         ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(this, titles, details);
         expandableListView.setAdapter(expandableListAdapter);
-
-        /*ViewGroup.LayoutParams params = expandableListView.getLayoutParams();
-        params.height = 80;
-        expandableListView.setLayoutParams(params);
-        expandableListView.requestLayout();
-*/
-        //expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener());
-        /*
-        CustomAdapter customAdapter = new CustomAdapter();
-
-        listView.setAdapter(customAdapter);
-      /*  ArrayAdapter<String> masechtaAdap = new ArrayAdapter<String>(this, R.layout.masechtos_layout, zeraimHeb);
-        ListView listView = (ListView)findViewById(R.id.masechtosListView);
-        listView.setAdapter(masechtaAdap);
-*/
 
     }
 
@@ -181,33 +159,6 @@ public class MasechtosList extends Toolbar_parent {
         allSedarim.add(sederNezikin);
         allSedarim.add(sederKodshim);
         allSedarim.add(sederTaharos);
-/*
-        HashMap<String, Masechta> masechtos = new HashMap<>();
-        for(int i=0; i<sederZeraim.length; i++)
-        {
-            masechtos.put(sedarimHeb[0],sederZeraim[i]);
-        }
-        for(int i=0; i<sederMoed.length; i++)
-        {
-            masechtos.put(sedarimHeb[1],sederMoed[i]);
-        }
-        for(int i=0; i<sederNashim.length; i++)
-        {
-            masechtos.put(sedarimHeb[2],sederNashim[i]);
-        }
-        for(int i=0; i<sederNezikin.length; i++)
-        {
-            masechtos.put(sedarimHeb[3],sederNezikin[i]);
-        }
-        for(int i=0; i<sederKodshim.length; i++)
-        {
-            masechtos.put(sedarimHeb[4],sederKodshim[i]);
-        }
-        for(int i=0; i<sederTaharos.length; i++)
-        {
-            masechtos.put(sedarimHeb[5],sederTaharos[i]);
-        }
-        */
 
         masechtos.put(sedarimHeb[0], sederZeraim);
         masechtos.put(sedarimHeb[1], sederMoed);
@@ -216,42 +167,6 @@ public class MasechtosList extends Toolbar_parent {
         masechtos.put(sedarimHeb[4], sederKodshim);
         masechtos.put(sedarimHeb[5], sederTaharos);
     }
-
-/*
-    class CustomAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return zeraimEng.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = getLayoutInflater().inflate(R.layout.masechta_info, null);
-
-            TextView masechtaName = (TextView)convertView.findViewById(R.id.masechtaName);
-            TextView perakim = (TextView)convertView.findViewById(R.id.numPerakim);
-            TextView mishnayos = (TextView)convertView.findViewById(R.id.numMishnayos);
-
-            masechtaName.setText(zeraimHeb[position]);
-            perakim.setText(""+sederZeraim[position].numPerakim+ " פרקים ");
-            mishnayos.setText(""+sederZeraim[position].numMishnayos+ " משניות ");
-
-
-            return convertView;
-        }
-    }
-*/
 
     /*
     Designs the expandable list; the group-headers in one method, and the children in another
@@ -453,23 +368,7 @@ public class MasechtosList extends Toolbar_parent {
             final int groupPos = groupPosition;
             final int childPos = childPosition;
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-/*
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-            Query userEmail = ref.child("users").orderByChild("userEmail").equalTo(user.getEmail());
-            Log.d("emailNow", user.getEmail());
-            userEmail.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for(DataSnapshot snapshot:dataSnapshot.getChildren())
-                        snapshot.getRef().child("cases").push().setValue(new CaseTakenInfo(details.get(titles.get(groupPos))[childPos].engName, caseKey));
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-*/
             Log.d("CURRENTUSER", user.getUid());
             mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
             String key = mDatabase.getKey();

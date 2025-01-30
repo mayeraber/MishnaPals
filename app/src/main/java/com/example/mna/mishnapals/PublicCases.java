@@ -40,17 +40,6 @@ public class PublicCases extends Toolbar_parent {
         setContentView(R.layout.avail_public_cases2);
         ListView listView = (ListView) findViewById(R.id.publicCasesList);
 
-        /*listView.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        ProgressBar pBar = findViewById(R.id.progressBarPublic);
-                        pBar.setVisibility(View.GONE);
-                        listView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
-                }
-        );*/
-
         DatabaseReference dbref = FirebaseDatabase.getInstance().getReference();
         Query publicCase = dbref.child("cases").orderByChild("privateCase").equalTo(false);
 

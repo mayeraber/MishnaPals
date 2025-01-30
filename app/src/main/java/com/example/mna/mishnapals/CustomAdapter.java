@@ -199,17 +199,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         return cases.size();
     }
 
-    /*
-    //To use for unpacking instances of the Combo class from CaseTakenInfo.java
-    private static class Combo {
-        int sederNum;
-        int masechtaNum;
-        private Combo(int e1, int e2) {
-            sederNum = e1;
-            masechtaNum = e2;
-        }
-    }
-    */
     public void deleteItemFromFirebase(int position, boolean completed) {
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, null != cases ? cases.size() : 0);

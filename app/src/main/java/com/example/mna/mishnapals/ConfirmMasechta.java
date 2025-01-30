@@ -57,17 +57,6 @@ public class ConfirmMasechta extends Toolbar_parent {
         confirmMishnayos.setText(masechta.numMishnayos+"  משניות");
         CheckBox calCheckBox = (CheckBox)findViewById(R.id.calCheckBox);
         Button reserveBut = (Button)findViewById(R.id.confirmMasechtaButton);
-        /*final Thread thread = new Thread(){
-            @Override
-            public void run(){
-                try{
-                    //Thread.sleep(2500);
-                    //ConfirmMasechta.this.finish();
-                } catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };*/
 
         calCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             @Override
@@ -153,26 +142,12 @@ public class ConfirmMasechta extends Toolbar_parent {
 
                             }
                         });
-
-                        /*
-                        findViewById(R.id.timerCircle).setVisibility(View.INVISIBLE);
-
-                        Toast.makeText(getBaseContext(), "Success!!", Toast.LENGTH_SHORT).show();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                ConfirmMasechta.this.finish();
-                            }
-                        },2500);
-                        */
-                        //thread.start();
                     }
                 });}
             }
         });
     }
 
-    //TODO work more on the alarm
     //UPDATE 2/2024: Dropped the alarm feature for the foreseeable future. Switched to Calendar reminder. See AlarmSetter.java comments
     public void setAlarm()
     {

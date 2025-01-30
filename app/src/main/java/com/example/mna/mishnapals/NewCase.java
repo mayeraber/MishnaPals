@@ -202,32 +202,7 @@ public class NewCase extends AppCompatActivity {
 
             }
         });
-        /*
-        caseIdConfirm.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
 
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-                Query caseId = ref.child("cases").orderByChild("caseId").equalTo(caseIdEntry.getText().toString());
-
-                caseId.addListenerForSingleValueEvent(new ValueEventListener() {                        @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()){
-                        //Drawable img = NewCase.this.getBaseContext().getResources().getDrawable(R.drawable.indicator_input_error);
-                        //img.setBounds(0, 0, img.getIntrinsicWidth() * idTaken.getMeasuredHeight() / img.getIntrinsicHeight(), idTaken.getMeasuredHeight());
-                        idTaken.setCompoundDrawablesWithIntrinsicBounds(R.drawable.indicator_input_error, 0,0,0);
-                        //idTaken.setText("ID taken already");
-                        idTaken.setVisibility(View.VISIBLE);
-                    }
-                    else{
-                        idTaken.setVisibility(View.GONE);
-                    }
-
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-        });}});
-        */
         caseIdConfirm.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -314,7 +289,8 @@ public class NewCase extends AppCompatActivity {
             //store in firebase db
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             String key = usersEndpoint.push().getKey();
-            newCase.setUserNameOpened(user.getEmail());
+            //newCase.setUserNameOpened(user.getEmail());
+            newCase.setUserNameOpened(user.getUid()); //to protect email privacy in db, instead of needing to restrict access with firebase rule
             newCase.createMasechtos();
             Log.d("testing new case mas", " "+newCase.masechtos);
 

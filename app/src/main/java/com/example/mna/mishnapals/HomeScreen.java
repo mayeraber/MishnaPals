@@ -1,4 +1,3 @@
-//TODO Work more on the sign in options
 /*
 Home screen class with signin, and home-screen options of new case,
 all avail mishnayos, and user's mishnayos
@@ -147,6 +146,8 @@ public class HomeScreen extends AppCompatActivity {
     /*
     Check db for the public cases, put them into an arraylist and package into Intent to
     pass to "PublicCases' class
+    Update: moved this work into PublicCases.java, so that the new activity starts immediately
+    and the progress bar timer can show right away while data is fetched from the db
      */
     public void viewAllClicked_old(View view)
     {

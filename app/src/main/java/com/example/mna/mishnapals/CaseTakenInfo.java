@@ -56,48 +56,5 @@ public class CaseTakenInfo {
     public void setFinished(boolean finished) {
         this.finished = finished;
     }
-
-    //Class to save seder and masechta numerical value for use if a user removes an uncompleted masechta from their 'taken' list
-    //and we then need to set its 'taken' value in the 'cases' list to false.
-    //TODO perhaps set this up in a different way so that it doesnt have to be stored in the tree for each taken masechta,
-    // like perhaps set it static in the database
-
-    /* 7/24/24 realized no need, because have util class
-    public Combo getSeder() {
-
-        int position = -1;
-        List<String> zeraim = Arrays.asList("Berachos", "Peah", "Demai", "Kelaim", "Shviis", "Terumos", "Maaseros", "Maaser Sheini", "Chalah", "Orlah", "Bikurim");
-        List<String> moed = Arrays.asList("Shabbos", "Eiruvin", "Pesachim", "Shkalim", "Yoma", "Succah", "Beizah", "Rosh Hashana", "Taanis", "Megillah", "Moed Katan", "Chagigah");
-        List<String> nashim = Arrays.asList("Yevamos", "Kesubos", "Nedarim", "Nazir", "Sotah", "Gittin", "Kiddushin");
-        List<String> nezikin = Arrays.asList("Bava Kama", "Bava Metzia", "Bava Basra", "Sanherdin", "Makkos", "Shevuos", "Edios", "Avodah Zarah", "Avos", "Horios");
-        List<String> kodshim =Arrays.asList("Zevachim", "Menachos", "Chullin", "Bechoros", "Eiruchin", "Temurah", "Kerisos", "Meilah", "Tamid", "Middos", "Kinim");
-        List<String> taharos = Arrays.asList("Keilim", "Ohalos", "Negaim", "Parah", "Taharos", "Mikvaos", "Niddah", "Machshirin", "Zavim", "Tevul Yom", "Yadayim", "Uktzin");
-        if (zeraim.contains(masechtaTaken)) {
-            position = zeraim.indexOf(masechtaTaken);
-            return new Combo(0, position);
-        }
-        else if (moed.contains(masechtaTaken)) {
-            position = moed.indexOf(masechtaTaken);
-            return new Combo(1, position);
-        }
-        else if (nashim.contains(masechtaTaken)) {
-            position = nashim.indexOf(masechtaTaken);
-            return new Combo(2, position);
-        }
-        else if (nezikin.contains(masechtaTaken)) {
-            position = nezikin.indexOf(masechtaTaken);
-            return new Combo(3, position);
-        }
-        else if (kodshim.contains(masechtaTaken)) {
-            position = kodshim.indexOf(masechtaTaken);
-            return new Combo(4, position);
-        }
-        else if (taharos.contains(masechtaTaken)) {
-            position = taharos.indexOf(masechtaTaken);
-            return new Combo(5, position);
-        }
-
-        return null;
-    }
-    */
+    
 }

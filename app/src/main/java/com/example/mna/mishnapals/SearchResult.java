@@ -1,14 +1,10 @@
 /*
 User can search for a specific case by name. However, it will only display ne result.
  */
-//TODO Either enforce that 2 cases cant be called by same name, because a search can only display one, or perhaps allow it but enable the search results to show multiple results
 package com.example.mna.mishnapals;
 
 import android.content.Intent;
 import android.os.Bundle;
-//import android.support.v7.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,12 +14,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 /**
  * Created by MNA on 8/13/2017.
@@ -50,11 +42,11 @@ public class SearchResult extends Toolbar_parent{//AppCompatActivity{
                             final DataSnapshot snap = snapshot;
                             String date = snapshot.child("date").child("0").getValue() + "/" + snapshot.child("date").child("1").getValue() + "/" + snapshot.child("date").child("2").getValue();
                             SimpleDateFormat formatWithMonthName = new SimpleDateFormat("MMM dd, yyyy");
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");;//new SimpleDateFormat("MM/dd/yyyy");
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
                             try {
                                 searchResultName.setText((String) snapshot.child("firstName").getValue() + " ben/bas " + snapshot.child("fathersName").getValue() + "\n"  + formatWithMonthName.format(simpleDateFormat.parse(date)));//date);
-                                //Note: In ablove line the newline character wasnt working until I removed the 'inputType:textPersonName' from the XML
+                                //Note: In above line the newline character wasn't working until I removed the 'inputType:textPersonName' from the XML
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
