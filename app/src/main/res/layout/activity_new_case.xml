@@ -165,7 +165,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="17dp"
-        android:text="Name of Father" />
+        android:text="@string/name_of_father" />
 
     <TextView
         android:id="@+id/fatherNameLabelHebrew"
@@ -174,7 +174,7 @@
         android:layout_alignBottom="@+id/fatherNameLabel"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:text="שם האב" />
+        android:text="@string/father_name_hebrew" />
 
     <TextView
         android:id="@+id/niftarNameLabelHeb"
@@ -196,7 +196,8 @@
         android:clickable="true"
         android:text="@string/moreOptionsInNewCase"
         android:textColor="@android:color/holo_blue_dark"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:focusable="true" />
 
     <Button
         android:id="@+id/privateInfoButton"
@@ -220,10 +221,10 @@
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/caseIdEntry"
         android:breakStrategy="simple"
-        android:drawableLeft="@drawable/indicator_input_error"
         android:drawablePadding="5dp"
         android:textSize="10sp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:drawableLeftCompat="@drawable/indicator_input_error" />
 
     <TextView
         android:id="@+id/idMatch"
@@ -233,11 +234,11 @@
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/caseIDConfirm"
         android:breakStrategy="simple"
-        android:drawableLeft="@drawable/indicator_input_error"
         android:drawablePadding="5dp"
-        android:text="IDs must match"
+        android:text="@string/ids_must_match"
         android:textSize="10sp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:drawableLeftCompat="@drawable/indicator_input_error" />
 
 
 </RelativeLayout>

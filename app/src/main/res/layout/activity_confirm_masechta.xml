@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="com.example.mna.mishnapals.ConfirmMasechta">
+        tools:context="mna.mishnapals.ConfirmMasechta">
 
         <include
             layout="@layout/toolbar"
@@ -28,7 +28,6 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="TextView"
             android:textSize="35sp"
             app:layout_constraintBottom_toTopOf="@+id/confirmMasechtaButton"
             app:layout_constraintHorizontal_bias="0.502"
@@ -63,7 +62,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="TextView"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/numMishnayosConfirm"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -82,7 +80,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="TextView"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/confirmMasechtaButton"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -113,7 +110,7 @@
             android:id="@+id/calCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save to calendar"
+            android:text="@string/save_to_calendar"
             app:layout_constraintBottom_toTopOf="@+id/confirmMasechtaButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

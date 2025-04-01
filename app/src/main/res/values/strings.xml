@@ -104,4 +104,9 @@
     <string name="dateShloshimLabel">Shloshim Date</string>
     <string name="default_web_client_id">placeholder</string>
     <string name="title_activity_confirm_delete_masechta">ConfirmDeleteMasechta</string>
+    <string name="time_remaining_ended">"Time Remaining: Ended "</string>
+    <string name="save_to_calendar">Save to calendar</string>
+    <string name="name_of_father">Name of Father</string>
+    <string name="father_name_hebrew">שם האב</string>
+    <string name="ids_must_match">IDs must match</string>
 </resources>
